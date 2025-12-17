@@ -9,12 +9,7 @@
 import { Component } from '@angular/core';
 import { inject } from '@angular/core';
 import { OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -102,7 +97,7 @@ export class DataManagementComponent implements OnInit {
 
   /**
    * Main form group used for creating new entities.
-   * Contains nested FormGroups for each vehicle-related entity 
+   * Contains nested FormGroups for each vehicle-related entity
    * with proper validation rules.
    */
   public formGroup: FormGroup = new FormGroup({});
@@ -165,7 +160,7 @@ export class DataManagementComponent implements OnInit {
 
   /**
    * Lifecycle hook that is called after component initialization.
-   * Initializes the form groups for all entities (color, brand, engine, etc.) 
+   * Initializes the form groups for all entities (color, brand, engine, etc.)
    * with their respective FormControls and validators.
    * Also triggers the loading of all data entries from the backend for each entity.
    *
@@ -288,8 +283,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -322,8 +316,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -353,8 +346,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -377,10 +369,7 @@ export class DataManagementComponent implements OnInit {
   fetchDoorsByName(): void {
     this.selectedDoors =
       this.doors.find((doors) =>
-        doors.quantity
-          .toString()
-          .toLowerCase()
-          .includes(this.searchedDoorsName.toLowerCase())
+        doors.quantity.toString().toLowerCase().includes(this.searchedDoorsName.toLowerCase())
       ) ?? null;
   }
   /**
@@ -403,8 +392,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -436,8 +424,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -476,8 +463,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -490,9 +476,7 @@ export class DataManagementComponent implements OnInit {
   fetchEngineByName(): void {
     this.selectedEngine =
       this.engines.find((engine) =>
-        engine.engineType
-          .toLowerCase()
-          .includes(this.searchedEngineName.toLowerCase())
+        engine.engineType.toLowerCase().includes(this.searchedEngineName.toLowerCase())
       ) ?? null;
   }
   /**
@@ -515,8 +499,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -548,8 +531,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -588,8 +570,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -602,9 +583,7 @@ export class DataManagementComponent implements OnInit {
   fetchFuelByName(): void {
     this.selectedFuel =
       this.fuels.find((fuel) =>
-        fuel.fuelType
-          .toLowerCase()
-          .includes(this.searchedFuelName.toLowerCase())
+        fuel.fuelType.toLowerCase().includes(this.searchedFuelName.toLowerCase())
       ) ?? null;
   }
   /**
@@ -627,8 +606,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -660,8 +638,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -700,8 +677,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -714,9 +690,7 @@ export class DataManagementComponent implements OnInit {
   fetchHoldingByName(): void {
     this.selectedHolding =
       this.holdings.find((holding) =>
-        holding.name
-          .toLowerCase()
-          .includes(this.searchedHoldingName.toLowerCase())
+        holding.name.toLowerCase().includes(this.searchedHoldingName.toLowerCase())
       ) ?? null;
   }
   /**
@@ -739,8 +713,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -774,8 +747,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -816,8 +788,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Failed to create holding.';
+        this.errorMessageCreate = error?.error?.message || 'Failed to create holding.';
       },
     });
   }
@@ -830,10 +801,7 @@ export class DataManagementComponent implements OnInit {
   fetchSeatsByName(): void {
     this.selectedSeats =
       this.seats.find((seats) =>
-        seats.quantity
-          .toString()
-          .toLowerCase()
-          .includes(this.searchedSeatsName.toLowerCase())
+        seats.quantity.toString().toLowerCase().includes(this.searchedSeatsName.toLowerCase())
       ) ?? null;
   }
   /**
@@ -856,8 +824,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -889,8 +856,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -929,8 +895,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -966,8 +931,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -996,8 +960,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageCreate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -1029,8 +992,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -1076,8 +1038,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -1112,8 +1073,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageUpdate = null;
       },
       error: (error) => {
-        this.errorMessageUpdate =
-          error?.error?.message || 'Default error message';
+        this.errorMessageUpdate = error?.error?.message || 'Default error message';
       },
     });
   }
@@ -1156,8 +1116,7 @@ export class DataManagementComponent implements OnInit {
         this.errorMessageCreate = null;
       },
       error: (error) => {
-        this.errorMessageCreate =
-          error?.error?.message || 'Failed to create brand.';
+        this.errorMessageCreate = error?.error?.message || 'Failed to create brand.';
       },
     });
   }

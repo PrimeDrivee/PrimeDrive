@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
@@ -25,9 +20,7 @@ describe('NavigationComponent (standalone, OnPush)', () => {
       'isAuthenticated',
       'logout',
     ]);
-    usersServiceSpy = jasmine.createSpyObj<UsersService>('UsersService', [
-      'getCurrentUser',
-    ]);
+    usersServiceSpy = jasmine.createSpyObj<UsersService>('UsersService', ['getCurrentUser']);
     dialogSpy = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
@@ -42,8 +35,7 @@ describe('NavigationComponent (standalone, OnPush)', () => {
     fixture = TestBed.createComponent(NavigationComponent);
     component = fixture.componentInstance;
     component.reloadOnLogout = false; // avoid reload side effects
-    (component as unknown as { dialog: MatDialog }).dialog =
-      dialogSpy as unknown as MatDialog;
+    (component as unknown as { dialog: MatDialog }).dialog = dialogSpy as unknown as MatDialog;
   });
 
   it('initializes login state and admin flag when authenticated', fakeAsync(() => {
@@ -102,9 +94,7 @@ describe('NavigationComponent (standalone, OnPush)', () => {
       getState: () => 'OPEN',
     } as unknown as ReturnType<MatDialog['open']>);
     authServiceSpy.isAuthenticated.and.returnValue(of(true));
-    usersServiceSpy.getCurrentUser.and.returnValue(
-      of({ role: 'USER' } as User),
-    );
+    usersServiceSpy.getCurrentUser.and.returnValue(of({ role: 'USER' } as User));
 
     component.openLoginDialog();
     tick();

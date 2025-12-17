@@ -1,9 +1,9 @@
-import {Brand} from './brand.interface';
-import {Color} from './color.interface';
-import {Holding} from './holding.interface';
-import {SpecsWithDetails} from './specsWithDetails.interface';
-import {Type} from './type.interface';
-import {Vehicle} from './vehicle.interface';
+import { Brand } from './brand.interface';
+import { Color } from './color.interface';
+import { Holding } from './holding.interface';
+import { SpecsWithDetails } from './specsWithDetails.interface';
+import { Type } from './type.interface';
+import { Vehicle } from './vehicle.interface';
 
 /**
  * Extended interface representing a vehicle with essential branding and type information.

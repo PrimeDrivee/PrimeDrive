@@ -10,6 +10,4 @@ import { AppComponent } from './app/app.component';
  * Version: 1.0.0
  * Date: 2025-06-03
  */
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
-  console.error(err)
-);
+bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));

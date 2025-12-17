@@ -3,37 +3,53 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Fahrzeugname</mat-label>
-      <input matInput formControlName="name" required placeholder="Fahrzeugname eingeben">
+      <input matInput formControlName="name" required placeholder="Fahrzeugname eingeben" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Bild-URL</mat-label>
-      <input matInput formControlName="image" required placeholder="Link zum Fahrzeugbild">
+      <input matInput formControlName="image" required placeholder="Link zum Fahrzeugbild" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Preis</mat-label>
-      <input matInput type="number" formControlName="price" required placeholder="Preis in CHF">
+      <input matInput type="number" formControlName="price" required placeholder="Preis in CHF" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Baujahr</mat-label>
-      <input matInput type="number" formControlName="year" required placeholder="Baujahr z.B. 2020">
+      <input
+        matInput
+        type="number"
+        formControlName="year"
+        required
+        placeholder="Baujahr z.B. 2020"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Kilometerstand</mat-label>
-      <input matInput type="number" formControlName="mileage" required placeholder="Kilometerstand z.B. 100000">
+      <input
+        matInput
+        type="number"
+        formControlName="mileage"
+        required
+        placeholder="Kilometerstand z.B. 100000"
+      />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Zustand</mat-label>
-      <input matInput formControlName="condition" placeholder="z. B. Gebraucht, Neu">
+      <input matInput formControlName="condition" placeholder="z. B. Gebraucht, Neu" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Fahrzeughistorie</mat-label>
-      <textarea matInput formControlName="vehicleHistory" placeholder="Kurze Beschreibung oder Historie"></textarea>
+      <textarea
+        matInput
+        formControlName="vehicleHistory"
+        placeholder="Kurze Beschreibung oder Historie"
+      ></textarea>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -69,62 +85,122 @@
     <div [formGroup]="specsForm">
       <mat-form-field appearance="fill">
         <mat-label>Leistung (kW)</mat-label>
-        <input matInput type="number" formControlName="powerKw" required placeholder="z.B. 100">
+        <input matInput type="number" formControlName="powerKw" required placeholder="z.B. 100" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Leistung (PS)</mat-label>
-        <input matInput type="number" formControlName="powerPs" required placeholder="z.B. 136">
+        <input matInput type="number" formControlName="powerPs" required placeholder="z.B. 136" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Länge (mm)</mat-label>
-        <input matInput type="number" formControlName="lengthMillimeter" required placeholder="z.B. 4500">
+        <input
+          matInput
+          type="number"
+          formControlName="lengthMillimeter"
+          required
+          placeholder="z.B. 4500"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Breite (mm)</mat-label>
-        <input matInput type="number" formControlName="widthMillimeter" required placeholder="z.B. 1800">
+        <input
+          matInput
+          type="number"
+          formControlName="widthMillimeter"
+          required
+          placeholder="z.B. 1800"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Höhe (mm)</mat-label>
-        <input matInput type="number" formControlName="heightMillimeter" required placeholder="z.B. 1400">
+        <input
+          matInput
+          type="number"
+          formControlName="heightMillimeter"
+          required
+          placeholder="z.B. 1400"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Kofferraumvolumen min (l)</mat-label>
-        <input matInput type="number" formControlName="trunkInLiterMin" required placeholder="z.B. 350">
+        <input
+          matInput
+          type="number"
+          formControlName="trunkInLiterMin"
+          required
+          placeholder="z.B. 350"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Kofferraumvolumen max (l)</mat-label>
-        <input matInput type="number" formControlName="trunkInLiterMax" required placeholder="z.B. 1200">
+        <input
+          matInput
+          type="number"
+          formControlName="trunkInLiterMax"
+          required
+          placeholder="z.B. 1200"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>0–100 km/h (s)</mat-label>
-        <input matInput type="number" formControlName="zeroToHundredInSeconds" required placeholder="z.B. 9.8">
+        <input
+          matInput
+          type="number"
+          formControlName="zeroToHundredInSeconds"
+          required
+          placeholder="z.B. 9.8"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Vmax (km/h)</mat-label>
-        <input matInput type="number" formControlName="topSpeedInKmh" required placeholder="z.B. 190">
+        <input
+          matInput
+          type="number"
+          formControlName="topSpeedInKmh"
+          required
+          placeholder="z.B. 190"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Verbrauch/100km</mat-label>
-        <input matInput type="number" formControlName="consumptionHundredInX" required placeholder="z.B. 6.5">
+        <input
+          matInput
+          type="number"
+          formControlName="consumptionHundredInX"
+          required
+          placeholder="z.B. 6.5"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>CO₂-Emissionen (g/km)</mat-label>
-        <input matInput type="number" formControlName="coTwoEmissionInGPerKm" required placeholder="z.B. 130">
+        <input
+          matInput
+          type="number"
+          formControlName="coTwoEmissionInGPerKm"
+          required
+          placeholder="z.B. 130"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Hubraum (cm³)</mat-label>
-        <input matInput type="number" formControlName="cubicCapacity" required placeholder="z.B. 1598">
+        <input
+          matInput
+          type="number"
+          formControlName="cubicCapacity"
+          required
+          placeholder="z.B. 1598"
+        />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
@@ -171,7 +247,6 @@
 <mat-card class="sell-list-card">
   <mat-card-title>Deine Verkaufsfahrzeuge</mat-card-title>
   <mat-table [dataSource]="userVehicles" class="mat-elevation-z8">
-
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
       <mat-cell *matCellDef="let vehicle"> {{ vehicle.name }} </mat-cell>

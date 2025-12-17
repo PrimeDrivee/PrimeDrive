@@ -1,123 +1,236 @@
 <form (ngSubmit)="register()" #registerForm="ngForm">
-    <mat-dialog-content>
+  <mat-dialog-content>
     <mat-form-field appearance="fill">
-        <mat-label>Username</mat-label>
-        <input matInput type="text" name="username" [(ngModel)]="username" #usernameModel="ngModel" required placeholder="Gib deinen usernamen ein" title="Username">
-        @if (usernameModel.invalid && (usernameModel.dirty || usernameModel.touched)) {
-            <mat-error>Username ist erforderlich.</mat-error>
-        }
+      <mat-label>Username</mat-label>
+      <input
+        matInput
+        type="text"
+        name="username"
+        [(ngModel)]="username"
+        #usernameModel="ngModel"
+        required
+        placeholder="Gib deinen usernamen ein"
+        title="Username"
+      />
+      @if (usernameModel.invalid && (usernameModel.dirty || usernameModel.touched)) {
+        <mat-error>Username ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" name="password" [(ngModel)]="password" #passwordModel="ngModel" required placeholder="Gib deinen password ein" title="Password">
-        @if (passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)) {
-            <mat-error>Passwort ist erforderlich.</mat-error>
-        }
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        #passwordModel="ngModel"
+        required
+        placeholder="Gib deinen password ein"
+        title="Password"
+      />
+      @if (passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)) {
+        <mat-error>Passwort ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Bestätige Password</mat-label>
-        <input matInput type="password" name="confirmPassword" [(ngModel)]="confirmPassword" #confirmPasswordModel="ngModel" required placeholder="Bestätige dein password" title="Bestätige Password">
-        @if (confirmPasswordModel && (confirmPasswordModel.dirty || confirmPasswordModel.touched)) {
-            @if (confirmPasswordModel.errors?.['required']) {
-            <mat-error>Bitte bestätige dein Passwort.</mat-error>
-            }
-            @if (confirmPasswordModel.errors?.['mismatch']) {
-            <mat-error>Die Passwörter stimmen nicht überein.</mat-error>
-            }
+      <mat-label>Bestätige Password</mat-label>
+      <input
+        matInput
+        type="password"
+        name="confirmPassword"
+        [(ngModel)]="confirmPassword"
+        #confirmPasswordModel="ngModel"
+        required
+        placeholder="Bestätige dein password"
+        title="Bestätige Password"
+      />
+      @if (confirmPasswordModel && (confirmPasswordModel.dirty || confirmPasswordModel.touched)) {
+        @if (confirmPasswordModel.errors?.['required']) {
+          <mat-error>Bitte bestätige dein Passwort.</mat-error>
         }
+        @if (confirmPasswordModel.errors?.['mismatch']) {
+          <mat-error>Die Passwörter stimmen nicht überein.</mat-error>
+        }
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Vorname</mat-label>
-        <input matInput type="text" name="firstName" [(ngModel)]="firstName" #firstNameModel="ngModel" required placeholder="Gib deinen Vornamen ein" title="First Name">
-        @if (firstNameModel.invalid && (firstNameModel.dirty || firstNameModel.touched)) {
-            <mat-error>Vorname ist erforderlich.</mat-error>
-        }
+      <mat-label>Vorname</mat-label>
+      <input
+        matInput
+        type="text"
+        name="firstName"
+        [(ngModel)]="firstName"
+        #firstNameModel="ngModel"
+        required
+        placeholder="Gib deinen Vornamen ein"
+        title="First Name"
+      />
+      @if (firstNameModel.invalid && (firstNameModel.dirty || firstNameModel.touched)) {
+        <mat-error>Vorname ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Nachname</mat-label>
-        <input matInput type="text" name="lastName" [(ngModel)]="lastName" #lastNameModel="ngModel" required placeholder="Gib deinen Nachnamen ein" title="Last Name">
-        @if (lastNameModel.invalid && (lastNameModel.dirty || lastNameModel.touched)) {
-            <mat-error>Nachname ist erforderlich.</mat-error>
-        }
+      <mat-label>Nachname</mat-label>
+      <input
+        matInput
+        type="text"
+        name="lastName"
+        [(ngModel)]="lastName"
+        #lastNameModel="ngModel"
+        required
+        placeholder="Gib deinen Nachnamen ein"
+        title="Last Name"
+      />
+      @if (lastNameModel.invalid && (lastNameModel.dirty || lastNameModel.touched)) {
+        <mat-error>Nachname ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>E-Mail</mat-label>
-        <input matInput type="text" name="email" [(ngModel)]="email" #emailModel="ngModel" required placeholder="Gib eine e-mail adresse ein" title="E-Mail">
-        @if (emailModel.invalid && (emailModel.dirty || emailModel.touched)) {
-            <mat-error>E-Mail ist erforderlich.</mat-error>
-        }
+      <mat-label>E-Mail</mat-label>
+      <input
+        matInput
+        type="text"
+        name="email"
+        [(ngModel)]="email"
+        #emailModel="ngModel"
+        required
+        placeholder="Gib eine e-mail adresse ein"
+        title="E-Mail"
+      />
+      @if (emailModel.invalid && (emailModel.dirty || emailModel.touched)) {
+        <mat-error>E-Mail ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Geburtstag</mat-label>
-        <input matInput type="date" name="birthdate" [(ngModel)]="birthdate" #birthdateModel="ngModel" required placeholder="Gib dein Geburtstag ein" title="Birthdate">
-        @if (birthdateModel.invalid && (birthdateModel.dirty || birthdateModel.touched)) {
-            <mat-error>Geburtsdatum ist erforderlich.</mat-error>
-        }
+      <mat-label>Geburtstag</mat-label>
+      <input
+        matInput
+        type="date"
+        name="birthdate"
+        [(ngModel)]="birthdate"
+        #birthdateModel="ngModel"
+        required
+        placeholder="Gib dein Geburtstag ein"
+        title="Birthdate"
+      />
+      @if (birthdateModel.invalid && (birthdateModel.dirty || birthdateModel.touched)) {
+        <mat-error>Geburtsdatum ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Adresse</mat-label>
-        <input matInput type="text" name="address" [(ngModel)]="address" #addressModel="ngModel" required placeholder="Gib deine addresse ein" title="Address">
-        @if (addressModel.invalid && (addressModel.dirty || addressModel.touched)) {
-            <mat-error>Adresse ist erforderlich.</mat-error>
-        }
+      <mat-label>Adresse</mat-label>
+      <input
+        matInput
+        type="text"
+        name="address"
+        [(ngModel)]="address"
+        #addressModel="ngModel"
+        required
+        placeholder="Gib deine addresse ein"
+        title="Address"
+      />
+      @if (addressModel.invalid && (addressModel.dirty || addressModel.touched)) {
+        <mat-error>Adresse ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Postleitzahl</mat-label>
-        <input matInput type="text" name="zipCode" [(ngModel)]="zipCode" #zipCodeModel="ngModel" required placeholder="Gib deine Postleitzahl ein" title="Zip Code">
-        @if (zipCodeModel && (zipCodeModel.dirty || zipCodeModel.touched)) {
-            @if (zipCodeModel.errors?.['required']) {
-            <mat-error>Postleitzahl ist erforderlich.</mat-error>
-            }
-            @if (zipCodeModel.errors?.['invalidZip']) {
-            <mat-error>Die Postleitzahl muss genau 4 Ziffern enthalten.</mat-error>
-            }
+      <mat-label>Postleitzahl</mat-label>
+      <input
+        matInput
+        type="text"
+        name="zipCode"
+        [(ngModel)]="zipCode"
+        #zipCodeModel="ngModel"
+        required
+        placeholder="Gib deine Postleitzahl ein"
+        title="Zip Code"
+      />
+      @if (zipCodeModel && (zipCodeModel.dirty || zipCodeModel.touched)) {
+        @if (zipCodeModel.errors?.['required']) {
+          <mat-error>Postleitzahl ist erforderlich.</mat-error>
         }
+        @if (zipCodeModel.errors?.['invalidZip']) {
+          <mat-error>Die Postleitzahl muss genau 4 Ziffern enthalten.</mat-error>
+        }
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Stadt</mat-label>
-        <input matInput type="text" name="city" [(ngModel)]="city" #cityModel="ngModel" required placeholder="Gib deine Stadt ein" title="City">
-        @if (cityModel.invalid && (cityModel.dirty || cityModel.touched)) {
-            <mat-error>Stadt ist erforderlich.</mat-error>
-        }
+      <mat-label>Stadt</mat-label>
+      <input
+        matInput
+        type="text"
+        name="city"
+        [(ngModel)]="city"
+        #cityModel="ngModel"
+        required
+        placeholder="Gib deine Stadt ein"
+        title="City"
+      />
+      @if (cityModel.invalid && (cityModel.dirty || cityModel.touched)) {
+        <mat-error>Stadt ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Land</mat-label>
-        <input matInput type="text" name="country" [(ngModel)]="country" #countryModel="ngModel" required placeholder="Gib dein Land ein" title="Country">
-        @if (countryModel.invalid && (countryModel.dirty || countryModel.touched)) {
-            <mat-error>Land ist erforderlich.</mat-error>
-        }
+      <mat-label>Land</mat-label>
+      <input
+        matInput
+        type="text"
+        name="country"
+        [(ngModel)]="country"
+        #countryModel="ngModel"
+        required
+        placeholder="Gib dein Land ein"
+        title="Country"
+      />
+      @if (countryModel.invalid && (countryModel.dirty || countryModel.touched)) {
+        <mat-error>Land ist erforderlich.</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Telephone/Natel</mat-label>
-        <input matInput type="txt" name="phoneNumber" [(ngModel)]="phoneNumber" #phoneNumberModel="ngModel"
-            required
-            pattern="^0[0-9]{9}$"
-            placeholder="Gib deine Telephone/Natel nummer ein"
-            title="Phone number">
-        @if (phoneNumberModel && (phoneNumberModel.dirty || phoneNumberModel.touched)) {
-            @if (phoneNumberModel.errors?.['required']) {
-            <mat-error>Telefonnummer ist erforderlich.</mat-error>
-            }
-            @if (phoneNumberModel.errors?.['pattern']) {
-            <mat-error>Die Telefonnummer muss mit 0 beginnen und genau 10 Ziffern lang sein.</mat-error>
-            }
+      <mat-label>Telephone/Natel</mat-label>
+      <input
+        matInput
+        type="txt"
+        name="phoneNumber"
+        [(ngModel)]="phoneNumber"
+        #phoneNumberModel="ngModel"
+        required
+        pattern="^0[0-9]{9}$"
+        placeholder="Gib deine Telephone/Natel nummer ein"
+        title="Phone number"
+      />
+      @if (phoneNumberModel && (phoneNumberModel.dirty || phoneNumberModel.touched)) {
+        @if (phoneNumberModel.errors?.['required']) {
+          <mat-error>Telefonnummer ist erforderlich.</mat-error>
         }
+        @if (phoneNumberModel.errors?.['pattern']) {
+          <mat-error
+            >Die Telefonnummer muss mit 0 beginnen und genau 10 Ziffern lang sein.</mat-error
+          >
+        }
+      }
     </mat-form-field>
-    </mat-dialog-content>
-
+  </mat-dialog-content>
 </form>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close type="button">Cancel</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.form.valid || password !== confirmPassword">Register</button>
+  <button mat-button mat-dialog-close type="button">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    [disabled]="!registerForm.form.valid || password !== confirmPassword"
+  >
+    Register
+  </button>
 </mat-dialog-actions>

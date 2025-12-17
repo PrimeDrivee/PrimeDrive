@@ -5,108 +5,126 @@
   </mat-card-header>
   @if (filtersExpanded) {
     <mat-card-content>
-    <div class="filter-fields">
-      
-      <mat-form-field appearance="fill">
-        <mat-label>Holding</mat-label>
-        <mat-select [(ngModel)]="filters.holding" (ngModelChange)="updateFilterOptions()">
-          @for (holding of uniqueHoldings; track holding) {
-            <mat-option [value]="holding">{{ holding }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <div class="filter-fields">
+        <mat-form-field appearance="fill">
+          <mat-label>Holding</mat-label>
+          <mat-select [(ngModel)]="filters.holding" (ngModelChange)="updateFilterOptions()">
+            @for (holding of uniqueHoldings; track holding) {
+              <mat-option [value]="holding">{{ holding }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Marke</mat-label>
-        <mat-select [(ngModel)]="filters.brand" (ngModelChange)="updateFilterOptions()">
-          @for (brand of uniqueBrands; track brand) {
-            <mat-option [value]="brand">{{ brand }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Marke</mat-label>
+          <mat-select [(ngModel)]="filters.brand" (ngModelChange)="updateFilterOptions()">
+            @for (brand of uniqueBrands; track brand) {
+              <mat-option [value]="brand">{{ brand }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Fahrzeugtyp</mat-label>
-        <mat-select [(ngModel)]="filters.type" (ngModelChange)="updateFilterOptions()">
-          @for (type of uniqueTypes; track type) {
-            <mat-option [value]="type">{{ type }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Fahrzeugtyp</mat-label>
+          <mat-select [(ngModel)]="filters.type" (ngModelChange)="updateFilterOptions()">
+            @for (type of uniqueTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Zustand</mat-label>
-        <mat-select [(ngModel)]="filters.condition" (ngModelChange)="updateFilterOptions()">
-          @for (condition of uniqueConditions; track condition) {
-            <mat-option [value]="condition">{{ condition }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Zustand</mat-label>
+          <mat-select [(ngModel)]="filters.condition" (ngModelChange)="updateFilterOptions()">
+            @for (condition of uniqueConditions; track condition) {
+              <mat-option [value]="condition">{{ condition }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Baujahr (ab)</mat-label>
-        <input matInput type="number" [(ngModel)]="filters.year" placeholder="Baujahr eingeben" title="Baujahr (ab)" />
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Baujahr (ab)</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="filters.year"
+            placeholder="Baujahr eingeben"
+            title="Baujahr (ab)"
+          />
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Maximalpreis</mat-label>
-        <input matInput type="number" [(ngModel)]="filters.maxPrice" placeholder="Maximalpreis eingeben" title="Maximalpreis" />
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Maximalpreis</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="filters.maxPrice"
+            placeholder="Maximalpreis eingeben"
+            title="Maximalpreis"
+          />
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Maximaler Kilometerstand</mat-label>
-        <input matInput type="number" [(ngModel)]="filters.maxMileage" placeholder="Maximaler Kilometerstand eingeben" />
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Maximaler Kilometerstand</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="filters.maxMileage"
+            placeholder="Maximaler Kilometerstand eingeben"
+          />
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Farbe</mat-label>
-        <mat-select [(ngModel)]="filters.color" (ngModelChange)="updateFilterOptions()">
-          @for (color of uniqueColors; track color) {
-            <mat-option [value]="color">{{ color }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Farbe</mat-label>
+          <mat-select [(ngModel)]="filters.color" (ngModelChange)="updateFilterOptions()">
+            @for (color of uniqueColors; track color) {
+              <mat-option [value]="color">{{ color }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Motor</mat-label>
-        <mat-select [(ngModel)]="filters.engine" (ngModelChange)="updateFilterOptions()">
-          @for (engine of uniqueEngines; track engine) {
-            <mat-option [value]="engine">{{ engine }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Motor</mat-label>
+          <mat-select [(ngModel)]="filters.engine" (ngModelChange)="updateFilterOptions()">
+            @for (engine of uniqueEngines; track engine) {
+              <mat-option [value]="engine">{{ engine }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Kraftstoff</mat-label>
-        <mat-select [(ngModel)]="filters.fuel" (ngModelChange)="updateFilterOptions()">
-          @for (fuel of uniqueFuels; track fuel) {
-            <mat-option [value]="fuel">{{ fuel }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Kraftstoff</mat-label>
+          <mat-select [(ngModel)]="filters.fuel" (ngModelChange)="updateFilterOptions()">
+            @for (fuel of uniqueFuels; track fuel) {
+              <mat-option [value]="fuel">{{ fuel }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Sitze</mat-label>
-        <mat-select [(ngModel)]="filters.seats" (ngModelChange)="updateFilterOptions()">
-          @for (seat of uniqueSeats; track seat) {
-            <mat-option [value]="seat">{{ seat }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Sitze</mat-label>
+          <mat-select [(ngModel)]="filters.seats" (ngModelChange)="updateFilterOptions()">
+            @for (seat of uniqueSeats; track seat) {
+              <mat-option [value]="seat">{{ seat }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Türen</mat-label>
-        <mat-select [(ngModel)]="filters.doors" (ngModelChange)="updateFilterOptions()">
-          @for (door of uniqueDoors; track door) {
-            <mat-option [value]="door">{{ door }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Türen</mat-label>
+          <mat-select [(ngModel)]="filters.doors" (ngModelChange)="updateFilterOptions()">
+            @for (door of uniqueDoors; track door) {
+              <mat-option [value]="door">{{ door }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-      <div class="filter-actions">
-        <button mat-stroked-button color="primary" (click)="resetFilters()">Filter zurücksetzen</button>
+        <div class="filter-actions">
+          <button mat-stroked-button color="primary" (click)="resetFilters()">
+            Filter zurücksetzen
+          </button>
+        </div>
       </div>
-    </div>
     </mat-card-content>
   }
 </mat-card>
@@ -114,12 +132,14 @@
   @for (vehicle of getFilteredVehicles(); track vehicle.id) {
     <mat-card class="vehicle-card" (click)="goToVehicleDetails(vehicle.id)">
       <mat-card-header>
-        <mat-card-title>{{ vehicle.brand.name}} {{ vehicle.name }}</mat-card-title>
-        <mat-card-subtitle>{{ vehicle.year }} • {{ vehicle.condition }} • {{vehicle.type.type}}</mat-card-subtitle>
+        <mat-card-title>{{ vehicle.brand.name }} {{ vehicle.name }}</mat-card-title>
+        <mat-card-subtitle
+          >{{ vehicle.year }} • {{ vehicle.condition }} • {{ vehicle.type.type }}</mat-card-subtitle
+        >
       </mat-card-header>
       <img mat-card-image [src]="vehicle.image" alt="{{ vehicle.name }}" />
       <mat-card-content>
-        <p><strong>Preis:</strong> {{ vehicle.price | currency:'CHF' }}</p>
+        <p><strong>Preis:</strong> {{ vehicle.price | currency: 'CHF' }}</p>
         <p><strong>Kilometerstand:</strong> {{ vehicle.mileage }} km</p>
         <p><strong>Historie:</strong> {{ vehicle.vehicleHistory }}</p>
       </mat-card-content>

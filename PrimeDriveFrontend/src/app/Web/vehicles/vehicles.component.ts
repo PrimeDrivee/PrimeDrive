@@ -112,34 +112,24 @@ export class VehiclesComponent implements OnInit {
                   color: vehicle.colorsId
                     ? this.vehiclesService.getColorById(vehicle.colorsId)
                     : of(null),
-                  specs: this.vehiclesService
-                    .getSpecsById(vehicle.specsId)
-                    .pipe(
-                      switchMap((specs) =>
-                        forkJoin({
-                          doors: this.vehiclesService.getDoorsById(
-                            specs.doorsId
-                          ),
-                          engine: this.vehiclesService.getEngineById(
-                            specs.engineId
-                          ),
-                          fuels: this.vehiclesService.getFuelById(
-                            specs.fuelsId
-                          ),
-                          seats: this.vehiclesService.getSeatsById(
-                            specs.seatsId
-                          ),
-                        }).pipe(
-                          map((details) => ({
-                            ...specs,
-                            doors: details.doors,
-                            engine: details.engine,
-                            fuels: details.fuels,
-                            seats: details.seats,
-                          }))
-                        )
+                  specs: this.vehiclesService.getSpecsById(vehicle.specsId).pipe(
+                    switchMap((specs) =>
+                      forkJoin({
+                        doors: this.vehiclesService.getDoorsById(specs.doorsId),
+                        engine: this.vehiclesService.getEngineById(specs.engineId),
+                        fuels: this.vehiclesService.getFuelById(specs.fuelsId),
+                        seats: this.vehiclesService.getSeatsById(specs.seatsId),
+                      }).pipe(
+                        map((details) => ({
+                          ...specs,
+                          doors: details.doors,
+                          engine: details.engine,
+                          fuels: details.fuels,
+                          seats: details.seats,
+                        }))
                       )
-                    ),
+                    )
+                  ),
                   holding: this.vehiclesService.getHoldingById(brand.holdingId),
                 }).pipe(
                   map(
@@ -151,7 +141,7 @@ export class VehiclesComponent implements OnInit {
                         color: details.color,
                         specs: details.specs,
                         holding: details.holding,
-                      } as unknown as VehicleWithLessDetails)
+                      }) as unknown as VehicleWithLessDetails
                   )
                 )
               )
@@ -167,10 +157,7 @@ export class VehiclesComponent implements OnInit {
             'All',
             ...new Set(vehicles.map((v) => v.brand?.name).filter(Boolean)),
           ];
-          this.uniqueTypes = [
-            'All',
-            ...new Set(vehicles.map((v) => v.type?.type).filter(Boolean)),
-          ];
+          this.uniqueTypes = ['All', ...new Set(vehicles.map((v) => v.type?.type).filter(Boolean))];
           this.uniqueConditions = [
             'All',
             ...new Set(vehicles.map((v) => v.condition).filter(Boolean)),
@@ -186,27 +173,19 @@ export class VehiclesComponent implements OnInit {
           ];
           this.uniqueEngines = [
             'All',
-            ...new Set(
-              vehicles.map((v) => v.specs?.engine?.engineType).filter(Boolean)
-            ),
+            ...new Set(vehicles.map((v) => v.specs?.engine?.engineType).filter(Boolean)),
           ];
           this.uniqueFuels = [
             'All',
-            ...new Set(
-              vehicles.map((v) => v.specs?.fuel?.fuelType).filter(Boolean)
-            ),
+            ...new Set(vehicles.map((v) => v.specs?.fuel?.fuelType).filter(Boolean)),
           ];
           this.uniqueSeats = [
             'All',
-            ...new Set(
-              vehicles.map((v) => v.specs?.seats?.quantity).filter(Boolean)
-            ),
+            ...new Set(vehicles.map((v) => v.specs?.seats?.quantity).filter(Boolean)),
           ];
           this.uniqueDoors = [
             'All',
-            ...new Set(
-              vehicles.map((v) => v.specs?.doors?.quantity).filter(Boolean)
-            ),
+            ...new Set(vehicles.map((v) => v.specs?.doors?.quantity).filter(Boolean)),
           ];
         },
         error: (error: HttpErrorResponse) => {
@@ -223,26 +202,18 @@ export class VehiclesComponent implements OnInit {
   public getFilteredVehicles(): VehicleWithLessDetails[] {
     return this.vehicles.filter((v) => {
       return (
-        (this.filters.brand === 'All' ||
-          v.brand?.name === this.filters.brand) &&
+        (this.filters.brand === 'All' || v.brand?.name === this.filters.brand) &&
         (this.filters.type === 'All' || v.type?.type === this.filters.type) &&
         (!this.filters.year || v.year >= this.filters.year) &&
         (!this.filters.maxPrice || v.price <= this.filters.maxPrice) &&
         (!this.filters.maxMileage || v.mileage <= this.filters.maxMileage) &&
-        (this.filters.condition === 'All' ||
-          v.condition === this.filters.condition) &&
-        (this.filters.holding === 'All' ||
-          v.holding?.name === this.filters.holding) &&
-        (this.filters.color === 'All' ||
-          v.color?.name === this.filters.color) &&
-        (this.filters.engine === 'All' ||
-          v.specs?.engine?.engineType === this.filters.engine) &&
-        (this.filters.fuel === 'All' ||
-          v.specs?.fuel?.fuelType === this.filters.fuel) &&
-        (this.filters.seats === 'All' ||
-          v.specs?.seats?.quantity === this.filters.seats) &&
-        (this.filters.doors === 'All' ||
-          v.specs?.doors?.quantity === this.filters.doors)
+        (this.filters.condition === 'All' || v.condition === this.filters.condition) &&
+        (this.filters.holding === 'All' || v.holding?.name === this.filters.holding) &&
+        (this.filters.color === 'All' || v.color?.name === this.filters.color) &&
+        (this.filters.engine === 'All' || v.specs?.engine?.engineType === this.filters.engine) &&
+        (this.filters.fuel === 'All' || v.specs?.fuel?.fuelType === this.filters.fuel) &&
+        (this.filters.seats === 'All' || v.specs?.seats?.quantity === this.filters.seats) &&
+        (this.filters.doors === 'All' || v.specs?.doors?.quantity === this.filters.doors)
       );
     });
   }
@@ -291,32 +262,19 @@ export class VehiclesComponent implements OnInit {
     if (this.filters.brand === 'All' && this.filters.holding === 'All') {
       typeSource = allVehicles;
     } else if (this.filters.brand === 'All' && this.filters.holding !== 'All') {
-      typeSource = this.vehicles.filter(
-        (v) => v.holding?.name === this.filters.holding
-      );
+      typeSource = this.vehicles.filter((v) => v.holding?.name === this.filters.holding);
     }
 
-    this.uniqueTypes = [
-      'All',
-      ...new Set(typeSource.map((v) => v.type?.type).filter(Boolean)),
-    ];
-    this.uniqueConditions = [
-      'All',
-      ...new Set(filtered.map((v) => v.condition).filter(Boolean)),
-    ];
+    this.uniqueTypes = ['All', ...new Set(typeSource.map((v) => v.type?.type).filter(Boolean))];
+    this.uniqueConditions = ['All', ...new Set(filtered.map((v) => v.condition).filter(Boolean))];
     this.uniqueHoldings = [
       'All',
       ...new Set(allVehicles.map((v) => v.holding?.name).filter(Boolean)),
     ];
-    this.uniqueColors = [
-      'All',
-      ...new Set(filtered.map((v) => v.color?.name).filter(Boolean)),
-    ];
+    this.uniqueColors = ['All', ...new Set(filtered.map((v) => v.color?.name).filter(Boolean))];
     this.uniqueEngines = [
       'All',
-      ...new Set(
-        filtered.map((v) => v.specs?.engine?.engineType).filter(Boolean)
-      ),
+      ...new Set(filtered.map((v) => v.specs?.engine?.engineType).filter(Boolean)),
     ];
     this.uniqueFuels = [
       'All',

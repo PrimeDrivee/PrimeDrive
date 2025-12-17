@@ -14,9 +14,5 @@ import { provideHttpClient } from '@angular/common/http';
  * Date: 2025-06-03
  */
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideHttpClient(),
-    provideRouter(routes),
-    provideAnimationsAsync(),
-  ],
+  providers: [provideHttpClient(), provideRouter(routes), provideAnimationsAsync()],
 };

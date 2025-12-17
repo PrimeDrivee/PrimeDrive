@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { LoginResponse } from '../../Models/auth/loginResponse.interface';
 
@@ -26,15 +23,11 @@ describe('AuthService', () => {
     const credentials = { username: 'demo', password: 'secret' };
     let response: LoginResponse | undefined;
 
-    service
-      .login(credentials.username, credentials.password)
-      .subscribe((res) => {
-        response = res;
-      });
+    service.login(credentials.username, credentials.password).subscribe((res) => {
+      response = res;
+    });
 
-    const req = http.expectOne(
-      'https://localhost:8443/api/authentication/login',
-    );
+    const req = http.expectOne('https://localhost:8443/api/authentication/login');
     expect(req.request.method).toBe('POST');
     expect(req.request.withCredentials).toBeTrue();
     expect(req.request.body).toEqual(credentials);
@@ -45,9 +38,7 @@ describe('AuthService', () => {
 
   it('calls logout endpoint', () => {
     service.logout().subscribe();
-    const req = http.expectOne(
-      'https://localhost:8443/api/authentication/logout',
-    );
+    const req = http.expectOne('https://localhost:8443/api/authentication/logout');
     expect(req.request.method).toBe('POST');
     expect(req.request.withCredentials).toBeTrue();
     req.flush({});
@@ -56,9 +47,7 @@ describe('AuthService', () => {
   it('checks authentication status', () => {
     let value: boolean | undefined;
     service.isAuthenticated().subscribe((v) => (value = v));
-    const req = http.expectOne(
-      'https://localhost:8443/api/authentication/check-session',
-    );
+    const req = http.expectOne('https://localhost:8443/api/authentication/check-session');
     expect(req.request.method).toBe('GET');
     req.flush(true);
     expect(value).toBeTrue();
@@ -70,9 +59,7 @@ describe('AuthService', () => {
 
     service.register(payload).subscribe((res) => (response = res));
 
-    const req = http.expectOne(
-      'https://localhost:8443/api/authentication/register',
-    );
+    const req = http.expectOne('https://localhost:8443/api/authentication/register');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
     expect(req.request.withCredentials).toBeTrue();

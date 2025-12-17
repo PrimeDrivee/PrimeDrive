@@ -1,18 +1,18 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {Vehicle} from '../../../Models/vehicles/vehicle.interface';
-import {ActivatedRoute} from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Vehicle } from '../../../Models/vehicles/vehicle.interface';
+import { ActivatedRoute } from '@angular/router';
 
-import {HttpErrorResponse} from '@angular/common/http';
-import {MatCardModule} from '@angular/material/card';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatIconModule} from '@angular/material/icon';
-import {CommonModule} from '@angular/common';
-import {forkJoin, map, switchMap} from 'rxjs';
-import {VehicleWithFullDetails} from '../../../Models/vehicles/vehicleWithFullDetails';
-import {VehiclesService} from '../../../Services/vehicles/vehicles.service';
-import {Brand} from '../../../Models/vehicles/brand.interface';
-import {Color} from '../../../Models/vehicles/color.interface';
-import {Type, Type as VehicleType} from '../../../Models/vehicles/type.interface';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { forkJoin, map, switchMap } from 'rxjs';
+import { VehicleWithFullDetails } from '../../../Models/vehicles/vehicleWithFullDetails';
+import { VehiclesService } from '../../../Services/vehicles/vehicles.service';
+import { Brand } from '../../../Models/vehicles/brand.interface';
+import { Color } from '../../../Models/vehicles/color.interface';
+import { Type, Type as VehicleType } from '../../../Models/vehicles/type.interface';
 
 /**
  * Component that displays full details of a specific vehicle.
@@ -63,26 +63,24 @@ export class VehicleDetailsComponent implements OnInit {
         switchMap((vehicle: Vehicle) =>
           forkJoin({
             brand: this.VehiclesService.getBrandById(vehicle.brandsId).pipe(
-              map((brand: string | Brand) => typeof brand === 'string' ? {name: brand} as Brand : brand)
+              map((brand: string | Brand) =>
+                typeof brand === 'string' ? ({ name: brand } as Brand) : brand
+              )
             ),
             type: this.VehiclesService.getTypeById(vehicle.typesId).pipe(
               map((type: Type) =>
-                typeof type === 'string'
-                  ? {id: '', name: type, type: ''} as VehicleType
-                  : type
+                typeof type === 'string' ? ({ id: '', name: type, type: '' } as VehicleType) : type
               )
             ),
             color: this.VehiclesService.getColorById(vehicle.colorsId).pipe(
               map((color: string | Color) =>
-                typeof color === 'string'
-                  ? ({name: color} as Color)
-                  : color
+                typeof color === 'string' ? ({ name: color } as Color) : color
               )
             ),
             specs: this.VehiclesService.getSpecsById(vehicle.specsId),
             seller: this.VehiclesService.getUserById(vehicle.sellerId),
           }).pipe(
-            switchMap(({brand, type, color, specs, seller}) =>
+            switchMap(({ brand, type, color, specs, seller }) =>
               forkJoin({
                 engine: this.VehiclesService.getEngineById(specs.engineId),
                 fuel: this.VehiclesService.getFuelById(specs.fuelsId),

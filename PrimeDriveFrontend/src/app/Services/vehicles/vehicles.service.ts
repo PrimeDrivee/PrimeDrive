@@ -1,17 +1,17 @@
-import {HttpClient} from '@angular/common/http';
-import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Vehicle} from '../../Models/vehicles/vehicle.interface';
-import {Brand} from '../../Models/vehicles/brand.interface';
-import {Type as VehicleType} from '../../Models/vehicles/type.interface';
-import {Color} from '../../Models/vehicles/color.interface';
-import {Specs} from '../../Models/vehicles/specs.interface';
-import {Engine} from '../../Models/vehicles/engine.interface';
-import {Fuel} from '../../Models/vehicles/fuel.interface';
-import {Doors} from '../../Models/vehicles/doors.interface';
-import {Seats} from '../../Models/vehicles/seats.interface';
-import {User} from '../../Models/vehicles/user.interface';
-import {Holding} from '../../Models/vehicles/holding.interface';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Vehicle } from '../../Models/vehicles/vehicle.interface';
+import { Brand } from '../../Models/vehicles/brand.interface';
+import { Type as VehicleType } from '../../Models/vehicles/type.interface';
+import { Color } from '../../Models/vehicles/color.interface';
+import { Specs } from '../../Models/vehicles/specs.interface';
+import { Engine } from '../../Models/vehicles/engine.interface';
+import { Fuel } from '../../Models/vehicles/fuel.interface';
+import { Doors } from '../../Models/vehicles/doors.interface';
+import { Seats } from '../../Models/vehicles/seats.interface';
+import { User } from '../../Models/vehicles/user.interface';
+import { Holding } from '../../Models/vehicles/holding.interface';
 
 /**
  * Service for accessing vehicle-related data from the backend API.
@@ -66,13 +66,9 @@ export class VehiclesService {
    * @returns Observable of the updated Vehicle.
    */
   public updateVehicle(vehicle: Vehicle): Observable<Vehicle> {
-    return this.httpClient.put<Vehicle>(
-      `${this.apiUrl}/vehicle/${vehicle.id}`,
-      vehicle,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Vehicle>(`${this.apiUrl}/vehicle/${vehicle.id}`, vehicle, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -125,13 +121,9 @@ export class VehiclesService {
    */
   public updateBrand(brand: Brand): Observable<Brand> {
     console.log('Updating brand:', brand);
-    return this.httpClient.put<Brand>(
-      `${this.apiUrl}/vehicle_brands/${brand.id}`,
-      brand,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Brand>(`${this.apiUrl}/vehicle_brands/${brand.id}`, brand, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -150,12 +142,9 @@ export class VehiclesService {
    * @returns Observable of Holding array.
    */
   public getHoldingById(id: string): Observable<Holding[]> {
-    return this.httpClient.get<Holding[]>(
-      `${this.apiUrl}/vehicle_holdings/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.get<Holding[]>(`${this.apiUrl}/vehicle_holdings/${id}`, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -175,13 +164,9 @@ export class VehiclesService {
    */
   public createHolding(holding: Holding): Observable<Holding> {
     console.log('Creating holding:', holding);
-    return this.httpClient.post<Holding>(
-      `${this.apiUrl}/vehicle_holdings`,
-      holding,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.post<Holding>(`${this.apiUrl}/vehicle_holdings`, holding, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -190,13 +175,9 @@ export class VehiclesService {
    * @returns Observable of the updated Holding.
    */
   public updateHolding(holding: Holding): Observable<Holding> {
-    return this.httpClient.put<Holding>(
-      `${this.apiUrl}/vehicle_holdings/${holding.id}`,
-      holding,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Holding>(`${this.apiUrl}/vehicle_holdings/${holding.id}`, holding, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -205,12 +186,9 @@ export class VehiclesService {
    * @returns Observable of void.
    */
   public deleteHolding(id: string): Observable<void> {
-    return this.httpClient.delete<void>(
-      `${this.apiUrl}/vehicle_holdings/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.delete<void>(`${this.apiUrl}/vehicle_holdings/${id}`, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -219,12 +197,9 @@ export class VehiclesService {
    * @returns Observable of the VehicleType.
    */
   public getTypeById(id: string): Observable<VehicleType> {
-    return this.httpClient.get<VehicleType>(
-      `${this.apiUrl}/vehicle_types/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.get<VehicleType>(`${this.apiUrl}/vehicle_types/${id}`, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -243,13 +218,9 @@ export class VehiclesService {
    * @returns Observable of the created VehicleType.
    */
   public createType(type: VehicleType): Observable<VehicleType> {
-    return this.httpClient.post<VehicleType>(
-      `${this.apiUrl}/vehicle_types`,
-      type,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.post<VehicleType>(`${this.apiUrl}/vehicle_types`, type, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -258,13 +229,9 @@ export class VehiclesService {
    * @returns Observable of the updated VehicleType.
    */
   public updateType(type: VehicleType): Observable<VehicleType> {
-    return this.httpClient.put<VehicleType>(
-      `${this.apiUrl}/vehicle_types/${type.id}`,
-      type,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<VehicleType>(`${this.apiUrl}/vehicle_types/${type.id}`, type, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -316,13 +283,9 @@ export class VehiclesService {
    * @returns Observable of the updated Color.
    */
   public updateColor(color: Color): Observable<Color> {
-    return this.httpClient.put<Color>(
-      `${this.apiUrl}/vehicle_colors/${color.id}`,
-      color,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Color>(`${this.apiUrl}/vehicle_colors/${color.id}`, color, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -375,13 +338,9 @@ export class VehiclesService {
    * @returns Observable of the updated Specs.
    */
   public updateSpecs(specs: Specs): Observable<Specs> {
-    return this.httpClient.put<Specs>(
-      `${this.apiUrl}/vehicle_specs/${specs.id}`,
-      specs,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Specs>(`${this.apiUrl}/vehicle_specs/${specs.id}`, specs, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -422,13 +381,9 @@ export class VehiclesService {
    * @returns Observable of the created Engine.
    */
   public createEngine(engine: Engine): Observable<Engine> {
-    return this.httpClient.post<Engine>(
-      `${this.apiUrl}/vehicle_engine`,
-      engine,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.post<Engine>(`${this.apiUrl}/vehicle_engine`, engine, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -437,13 +392,9 @@ export class VehiclesService {
    * @returns Observable of the updated Engine.
    */
   public updateEngine(engine: Engine): Observable<Engine> {
-    return this.httpClient.put<Engine>(
-      `${this.apiUrl}/vehicle_engine/${engine.id}`,
-      engine,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Engine>(`${this.apiUrl}/vehicle_engine/${engine.id}`, engine, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -495,13 +446,9 @@ export class VehiclesService {
    * @returns Observable of the updated Fuel.
    */
   public updateFuel(fuel: Fuel): Observable<Fuel> {
-    return this.httpClient.put<Fuel>(
-      `${this.apiUrl}/vehicle_fuels/${fuel.id}`,
-      fuel,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Fuel>(`${this.apiUrl}/vehicle_fuels/${fuel.id}`, fuel, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -553,13 +500,9 @@ export class VehiclesService {
    * @returns Observable of the updated Doors.
    */
   public updateDoors(doors: Doors): Observable<Doors> {
-    return this.httpClient.put<Doors>(
-      `${this.apiUrl}/vehicle_doors/${doors.id}`,
-      doors,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Doors>(`${this.apiUrl}/vehicle_doors/${doors.id}`, doors, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -611,13 +554,9 @@ export class VehiclesService {
    * @returns Observable of the updated Seats.
    */
   public updateSeats(seats: Seats): Observable<Seats> {
-    return this.httpClient.put<Seats>(
-      `${this.apiUrl}/vehicle_seats/${seats.id}`,
-      seats,
-      {
-        withCredentials: true,
-      }
-    );
+    return this.httpClient.put<Seats>(`${this.apiUrl}/vehicle_seats/${seats.id}`, seats, {
+      withCredentials: true,
+    });
   }
 
   /**

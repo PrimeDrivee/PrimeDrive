@@ -89,15 +89,9 @@ export class RegisterDialogComponent implements AfterViewChecked {
     this.authService.register(registerDto).subscribe({
       error: (err: HttpErrorResponse) => {
         if (err.error instanceof ErrorEvent) {
-          console.error(
-            'Client-side error during registration:',
-            err.error.message
-          );
+          console.error('Client-side error during registration:', err.error.message);
         } else {
-          console.error(
-            `Server returned code ${err.status}, body was:`,
-            err.error
-          );
+          console.error(`Server returned code ${err.status}, body was:`, err.error);
         }
       },
     });
@@ -119,11 +113,7 @@ export class RegisterDialogComponent implements AfterViewChecked {
     }
 
     // Manual validation for zip code
-    if (
-      this.zipCodeModel &&
-      this.zipCodeModel.valid &&
-      !/^\d{4}$/.test(this.zipCode)
-    ) {
+    if (this.zipCodeModel && this.zipCodeModel.valid && !/^\d{4}$/.test(this.zipCode)) {
       this.zipCodeModel.control.setErrors({ invalidZip: true });
     } else if (this.zipCodeModel?.errors?.['invalidZip']) {
       this.zipCodeModel.control.setErrors(null);

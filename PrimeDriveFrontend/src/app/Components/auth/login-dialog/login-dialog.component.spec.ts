@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { of, delay, throwError } from 'rxjs';
 import { LoginDialogComponent } from './login-dialog.component';
 import { AuthService } from '../../../Services/auth/auth.service';
@@ -22,9 +17,7 @@ describe('LoginDialogComponent (standalone, OnPush)', () => {
   let dialogRefStub: MatDialogRefStub<LoginDialogComponent>;
 
   beforeEach(async () => {
-    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', [
-      'login',
-    ]);
+    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['login']);
     dialogRefStub = new MatDialogRefStub<LoginDialogComponent>();
 
     await TestBed.configureTestingModule({
@@ -44,7 +37,7 @@ describe('LoginDialogComponent (standalone, OnPush)', () => {
     component.username = 'demo';
     component.password = 'secret';
     authServiceSpy.login.and.returnValue(
-      of<LoginResponse>({ token: 'abc', userId: '1' }).pipe(delay(0)),
+      of<LoginResponse>({ token: 'abc', userId: '1' }).pipe(delay(0))
     );
     const loginSucceededSpy = jasmine.createSpy('loginSucceeded');
     component.loginSucceeded.subscribe(loginSucceededSpy);
@@ -60,7 +53,7 @@ describe('LoginDialogComponent (standalone, OnPush)', () => {
   it('respects closeOnSuccess=false and keeps dialog open', fakeAsync(() => {
     component.closeOnSuccess = false;
     authServiceSpy.login.and.returnValue(
-      of<LoginResponse>({ token: 'abc', userId: '1' }).pipe(delay(0)),
+      of<LoginResponse>({ token: 'abc', userId: '1' }).pipe(delay(0))
     );
 
     component.login();

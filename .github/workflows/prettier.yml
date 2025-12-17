@@ -1,0 +1,33 @@
+name: Prettier (PrimeDriveFrontend)
+
+on:
+    push:
+        paths:
+            - "PrimeDriveFrontend/**"
+            - ".github/workflows/prettier.yml"
+    pull_request:
+        paths:
+            - "PrimeDriveFrontend/**"
+            - ".github/workflows/prettier.yml"
+
+jobs:
+    prettier-frontend:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: PrimeDriveFrontend
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Use Node.js 22
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Install dependencies (Frontend)
+              run: npm ci
+
+            - name: Run Prettier check
+              run: npm run prettier:check

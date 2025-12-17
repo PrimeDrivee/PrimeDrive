@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { SellComponent } from './sell.component';
@@ -19,26 +14,21 @@ describe('SellComponent (standalone)', () => {
   let usersServiceMock: jasmine.SpyObj<UsersService>;
 
   beforeEach(async () => {
-    vehiclesServiceMock = jasmine.createSpyObj<VehiclesService>(
-      'VehiclesService',
-      [
-        'createSpecs',
-        'createVehicle',
-        'getVehicles',
-        'getSpecsById',
-        'getBrands',
-        'getColors',
-        'getTypes',
-        'getDoors',
-        'getSeats',
-        'getEngines',
-        'getFuels',
-      ],
-    );
-
-    usersServiceMock = jasmine.createSpyObj<UsersService>('UsersService', [
-      'getCurrentUser',
+    vehiclesServiceMock = jasmine.createSpyObj<VehiclesService>('VehiclesService', [
+      'createSpecs',
+      'createVehicle',
+      'getVehicles',
+      'getSpecsById',
+      'getBrands',
+      'getColors',
+      'getTypes',
+      'getDoors',
+      'getSeats',
+      'getEngines',
+      'getFuels',
     ]);
+
+    usersServiceMock = jasmine.createSpyObj<UsersService>('UsersService', ['getCurrentUser']);
 
     vehiclesServiceMock.getBrands.and.returnValue(of([]));
     vehiclesServiceMock.getColors.and.returnValue(of([]));
@@ -72,9 +62,7 @@ describe('SellComponent (standalone)', () => {
 
   it('creates specs and vehicle when forms are valid', fakeAsync(() => {
     usersServiceMock.getCurrentUser.and.returnValue(of({ id: 'u1' } as any));
-    vehiclesServiceMock.createSpecs.and.returnValue(
-      of({ id: 'spec1' } as Specs),
-    );
+    vehiclesServiceMock.createSpecs.and.returnValue(of({ id: 'spec1' } as Specs));
     vehiclesServiceMock.createVehicle.and.returnValue(of({} as Vehicle));
 
     component.form.patchValue({
@@ -134,9 +122,7 @@ describe('SellComponent (standalone)', () => {
   });
 
   it('loads reference data on init and sets sellerId', fakeAsync(() => {
-    usersServiceMock.getCurrentUser.and.returnValue(
-      of({ id: 'user-1' } as any),
-    );
+    usersServiceMock.getCurrentUser.and.returnValue(of({ id: 'user-1' } as any));
 
     fixture.detectChanges();
     tick();

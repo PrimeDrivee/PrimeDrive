@@ -27,27 +27,33 @@
  * @method deleteVehicle(id) - Entfernt ein Fahrzeug aus der lokalen Liste
  * @method ngOnInit() - Initialisiert Daten beim Laden der Komponente
  */
-import {Component, inject, OnInit, ViewEncapsulation} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTableModule} from '@angular/material/table';
-import {MatDividerModule} from '@angular/material/divider';
-import {Vehicle} from '../../Models/vehicles/vehicle.interface';
-import {Brand} from '../../Models/vehicles/brand.interface';
-import {Color} from '../../Models/vehicles/color.interface';
-import {Type as VehicleType} from '../../Models/vehicles/type.interface';
-import {Specs} from '../../Models/vehicles/specs.interface';
-import {VehiclesService} from '../../Services/vehicles/vehicles.service';
-import {UsersService} from '../../Services/users/users.service';
-import {Seats} from "../../Models/vehicles/seats.interface";
-import {Doors} from "../../Models/vehicles/doors.interface";
-import {Engine} from "../../Models/vehicles/engine.interface";
-import {Fuel} from "../../Models/vehicles/fuel.interface";
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
+import { Vehicle } from '../../Models/vehicles/vehicle.interface';
+import { Brand } from '../../Models/vehicles/brand.interface';
+import { Color } from '../../Models/vehicles/color.interface';
+import { Type as VehicleType } from '../../Models/vehicles/type.interface';
+import { Specs } from '../../Models/vehicles/specs.interface';
+import { VehiclesService } from '../../Services/vehicles/vehicles.service';
+import { UsersService } from '../../Services/users/users.service';
+import { Seats } from '../../Models/vehicles/seats.interface';
+import { Doors } from '../../Models/vehicles/doors.interface';
+import { Engine } from '../../Models/vehicles/engine.interface';
+import { Fuel } from '../../Models/vehicles/fuel.interface';
 
 @Component({
   selector: 'app-sell',
@@ -71,8 +77,7 @@ import {Fuel} from "../../Models/vehicles/fuel.interface";
 export class SellComponent implements OnInit {
   private vehicleService = inject(VehiclesService);
   private usersService = inject(UsersService);
-  private fb = inject(FormBuilder)
-
+  private fb = inject(FormBuilder);
 
   form: FormGroup = this.fb.group({
     id: [''],
@@ -121,7 +126,6 @@ export class SellComponent implements OnInit {
 
   userVehicles: Vehicle[] = [];
 
-
   /**
    * Verarbeitet die Eingabe aus beiden Formularen (allgemeine Fahrzeugdaten und Spezifikationen).
    * Erstellt zunächst die technischen Spezifikationen, verknüpft diese anschliessend mit dem Fahrzeug
@@ -167,56 +171,52 @@ export class SellComponent implements OnInit {
         fuelsId: rawSpecs.fuelsId,
       };
 
-      this.vehicleService
-        .createSpecs(specsPayload)
-        .subscribe((createdSpecs) => {
-          const vehicleData: Vehicle = {
-            ...rawVehicle,
-            specsId: createdSpecs.id,
-          };
-          console.log('Vehicle Data:', vehicleData);
-          this.vehicleService
-            .createVehicle(vehicleData)
-            .subscribe(() => {
-              this.loadUserVehicles(user.id);
+      this.vehicleService.createSpecs(specsPayload).subscribe((createdSpecs) => {
+        const vehicleData: Vehicle = {
+          ...rawVehicle,
+          specsId: createdSpecs.id,
+        };
+        console.log('Vehicle Data:', vehicleData);
+        this.vehicleService.createVehicle(vehicleData).subscribe(() => {
+          this.loadUserVehicles(user.id);
 
-              this.form.reset({
-                id: '',
-                name: '',
-                price: 0,
-                year: new Date().getFullYear(),
-                image: '',
-                mileage: 0,
-                condition: '',
-                vehicleHistory: '',
-                brandsId: '',
-                specsId: '',
-                typesId: '',
-                colorsId: '',
-                sellerId: '',
-              });
+          this.form.reset({
+            id: '',
+            name: '',
+            price: 0,
+            year: new Date().getFullYear(),
+            image: '',
+            mileage: 0,
+            condition: '',
+            vehicleHistory: '',
+            brandsId: '',
+            specsId: '',
+            typesId: '',
+            colorsId: '',
+            sellerId: '',
+          });
 
-              this.specsForm.reset({
-                id: '',
-                powerKw: 0,
-                powerPs: 0,
-                lengthMillimeter: 0,
-                widthMillimeter: 0,
-                heightMillimeter: 0,
-                trunkInLiterMin: 0,
-                trunkInLiterMax: 0,
-                zeroToHundredInSeconds: 0,
-                topSpeedInKmh: 0,
-                consumptionHundredInX: 0,
-                coTwoEmissionInGPerKm: 0,
-                cubicCapacity: 0,
-                doorsId: '',
-                seatsId: '',
-                engineId: '',
-                fuelsId: '',
-              });
-            });
+          this.specsForm.reset({
+            id: '',
+            powerKw: 0,
+            powerPs: 0,
+            lengthMillimeter: 0,
+            widthMillimeter: 0,
+            heightMillimeter: 0,
+            trunkInLiterMin: 0,
+            trunkInLiterMax: 0,
+            zeroToHundredInSeconds: 0,
+            topSpeedInKmh: 0,
+            consumptionHundredInX: 0,
+            coTwoEmissionInGPerKm: 0,
+            cubicCapacity: 0,
+            doorsId: '',
+            seatsId: '',
+            engineId: '',
+            fuelsId: '',
+          });
         });
+      });
     });
   }
 
@@ -294,7 +294,7 @@ export class SellComponent implements OnInit {
     });
     this.usersService.getCurrentUser().subscribe((user) => {
       if (user && user.id) {
-        this.form.patchValue({sellerId: user.id});
+        this.form.patchValue({ sellerId: user.id });
         this.loadUserVehicles(user.id);
       }
     });

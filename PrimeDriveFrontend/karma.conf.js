@@ -24,9 +24,7 @@ module.exports = function (config) {
       jasmine: {},
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
-    reporters: isCI
-      ? ['progress', 'junit', 'coverage']
-      : ['progress', 'kjhtml', 'coverage'],
+    reporters: isCI ? ['progress', 'junit', 'coverage'] : ['progress', 'kjhtml', 'coverage'],
     junitReporter: {
       outputDir: path.join(__dirname, 'coverage', 'prime-drive-frontend', 'junit'),
       outputFile: 'junit-report.xml',
@@ -35,11 +33,7 @@ module.exports = function (config) {
     coverageReporter: {
       dir: path.join(__dirname, 'coverage', 'prime-drive-frontend'),
       subdir: '.',
-      reporters: [
-        { type: 'html' },
-        { type: 'lcovonly' },
-        { type: 'text-summary' },
-      ],
+      reporters: [{ type: 'html' }, { type: 'lcovonly' }, { type: 'text-summary' }],
       check: {
         global: coverageThresholds,
       },

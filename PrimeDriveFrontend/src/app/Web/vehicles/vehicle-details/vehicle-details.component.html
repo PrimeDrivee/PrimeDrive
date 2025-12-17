@@ -13,7 +13,7 @@
 
     <!-- Fahrzeugdetails -->
     <mat-card-content class="vehicle-details">
-      <p><strong>Preis:</strong> {{ vehicle.price | currency:'CHF' }}</p>
+      <p><strong>Preis:</strong> {{ vehicle.price | currency: 'CHF' }}</p>
       <p><strong>Kilometer:</strong> {{ vehicle.mileage }} km</p>
       <p><strong>Historie:</strong> {{ vehicle.vehicleHistory }}</p>
     </mat-card-content>
@@ -23,9 +23,7 @@
       <mat-accordion class="vehicle-accordion">
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title>
-              Fahrzeugspezifikationen
-            </mat-panel-title>
+            <mat-panel-title> Fahrzeugspezifikationen </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="vehicle-specs">
@@ -35,9 +33,17 @@
             <p><strong>Höchstgeschwindigkeit:</strong> {{ vehicle.specs.topSpeedInKmh }} km/h</p>
             <p><strong>Verbrauch:</strong> {{ vehicle.specs.consumptionHundredInX }} l/100km</p>
             <p><strong>CO₂-Emissionen:</strong> {{ vehicle.specs.coTwoEmissionInGPerKm }} g/km</p>
-            <p><strong>Kofferraum (min–max):</strong> {{ vehicle.specs.trunkInLiterMin }}–{{ vehicle.specs.trunkInLiterMax }} l</p>
+            <p>
+              <strong>Kofferraum (min–max):</strong> {{ vehicle.specs.trunkInLiterMin }}–{{
+                vehicle.specs.trunkInLiterMax
+              }}
+              l
+            </p>
             <p><strong>Hubraum:</strong> {{ vehicle.specs.cubicCapacity }} cm³</p>
-            <p><strong>Masse (L×B×H):</strong> {{ vehicle.specs.lengthMillimeter }} × {{ vehicle.specs.widthMillimeter }} × {{ vehicle.specs.heightMillimeter }} mm</p>
+            <p>
+              <strong>Masse (L×B×H):</strong> {{ vehicle.specs.lengthMillimeter }} ×
+              {{ vehicle.specs.widthMillimeter }} × {{ vehicle.specs.heightMillimeter }} mm
+            </p>
           </div>
         </mat-expansion-panel>
       </mat-accordion>
