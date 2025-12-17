@@ -1,4 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../auth/login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from '../auth/register-dialog/register-dialog.component';
@@ -18,23 +27,29 @@ import { RouterModule } from '@angular/router';
  */
 @Component({
   selector: 'app-navigation',
-  imports: [
-    LoginDialogComponent,
-    RegisterDialogComponent,
-    RouterModule
-  ],
+  imports: [LoginDialogComponent, RegisterDialogComponent, RouterModule],
   standalone: true,
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavigationComponent implements OnInit {
   /** Indicates if the user is currently logged in. */
   protected isLoggedIn = false;
   /** Indicates if the current user has admin privileges. */
   protected isAdmin = false;
+  /** Controls whether logout triggers a full page reload. Useful to disable in tests. */
+  @Input() reloadOnLogout = true;
+  /** Emits the authentication state whenever it changes. */
+  @Output() loginStateChanged = new EventEmitter<boolean>();
+  /** Emits when logout completes; payload indicates success. */
+  @Output() logoutCompleted = new EventEmitter<boolean>();
+  /** Reload function to allow test overrides. */
+  private reloadFn: () => void = () => window.location.reload();
   private dialog = inject(MatDialog);
   private authService = inject(AuthService);
   private readonly usersService: UsersService = inject(UsersService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   /** Lifecycle hook that runs on component initialization. Checks login status. */
   public ngOnInit(): void {
@@ -68,10 +83,15 @@ export class NavigationComponent implements OnInit {
     this.authService.logout().subscribe({
       next: () => {
         this.isLoggedIn = false;
-        window.location.reload();
+        this.logoutCompleted.emit(true);
+        this.cdr.markForCheck();
+        if (this.reloadOnLogout) {
+          this.reloadFn();
+        }
       },
       error: (err) => {
         console.error('Logout failed:', err);
+        this.logoutCompleted.emit(false);
       },
     });
   }
@@ -80,11 +100,14 @@ export class NavigationComponent implements OnInit {
   private checkLoginStatus(): void {
     this.authService.isAuthenticated().subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
+      this.loginStateChanged.emit(loggedIn);
       if (loggedIn) {
         this.usersService.getCurrentUser().subscribe((user: User) => {
           this.isAdmin = user.role === 'ADMIN';
+          this.cdr.markForCheck();
         });
       }
+      this.cdr.markForCheck();
     });
   }
 }
