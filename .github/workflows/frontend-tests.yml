@@ -1,0 +1,45 @@
+name: Jasmine & Karma for Frontend Tests
+
+on:
+  push:
+    branches:
+      - "**" # run on all branches, including feature/*
+  pull_request:
+    branches:
+      - "**" # validate PRs targeting any branch
+  workflow_dispatch:
+
+jobs:
+  frontend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: PrimeDriveFrontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: PrimeDriveFrontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jasmine/Karma tests in CI mode
+        run: npm run test:ci
+        # Coverage thresholds live in karma.conf.js (coverageThresholds object).
+        # Failing thresholds will make this step fail, blocking the PR.
+
+      - name: Upload coverage artifacts (lcov + HTML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: |
+            PrimeDriveFrontend/coverage/prime-drive-frontend
+          retention-days: 7
+          # Reports: index.html for human review; lcov.info for tooling/badges.

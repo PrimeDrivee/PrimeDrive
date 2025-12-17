@@ -14,18 +14,20 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## Testing and coverage
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Local watch mode: `npm test`
+- CI/single-run with coverage: `npm run test:ci` (also used by GitHub Actions)
+- Coverage reports are written to `coverage/prime-drive-frontend/` (`index.html` for humans, `lcov.info` for tools/badges).
+- Coverage thresholds live in `karma.conf.js` under `coverageThresholds`; failing thresholds make the CI job fail.
 
-## Code formatting
+### CI status
 
-- Run `npm run prettier:check` to verify formatting.
-- Run `npm run prettier:write` to format files in place.
+The workflow **OPS-004 – Jasmine & Karma for Frontend Tests** runs on push/PR to `main`.
 
-## Running end-to-end tests
+Example status badge (adjust path if the repo or workflow name changes):
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![Frontend Tests](https://github.com/Champion0899/PrimeDrive/actions/workflows/ops-004-frontend-tests.yml/badge.svg)
 
 ## Further help
 
