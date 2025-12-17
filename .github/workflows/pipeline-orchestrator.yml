@@ -1,0 +1,46 @@
+# Orchestrator pipeline. Runs backend build, MySQL setup, and optionally ZAP scan per branch policy.
+# Branch policy: main/test run all jobs; dev runs build + MySQL only. PRs against these branches follow the same flow.
+name: pipeline-orchestrator
+
+on:
+    push:
+        branches: ["**"]
+    pull_request:
+        branches: ["**"]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    backend-tests:
+        name: Backend tests (reusable)
+        uses: ./.github/workflows/backend-tests.yml
+
+    eslint:
+        name: Frontend ESLint
+        uses: ./.github/workflows/eslint.yml
+
+    backend-build:
+        name: Backend build and tests
+        uses: ./.github/workflows/backend-build.yml
+
+    mysql-container:
+        name: MySQL container setup
+        needs: backend-build
+        uses: ./.github/workflows/mysql-container.yml
+        secrets:
+            MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+            MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USER: ${{ secrets.MYSQL_USER }}
+            MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+    security-zap-scan:
+        name: OWASP ZAP scan
+        needs: [backend-build, mysql-container]
+        uses: ./.github/workflows/security-zap-scan.yml
+        with:
+            target_url: http://localhost:8080
+            zap_scan_type: baseline
+        secrets:
+            ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}

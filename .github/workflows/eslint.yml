@@ -1,6 +1,7 @@
 name: ESLint (PrimeDriveFrontend)
 
 on:
+  workflow_call:
   push:
     branches: ["**"]
   pull_request:
@@ -27,4 +28,3 @@ jobs:
 
       - name: Run ESLint via Angular CLI
         run: npm run lint
-

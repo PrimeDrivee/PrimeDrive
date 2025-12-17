@@ -1,2 +1,14 @@
 # VS Code
 .vscode/*
+
+# Local ZAP scan artifacts
+scripts/zap-report.html
+scripts/zap-report.xml
+scripts/zap-report.json
+scripts/zap-warnings.md
+scripts/zap_out.json
+zap-report.html
+zap-report.xml
+zap-report.json
+zap-warnings.md
+zap_out.json

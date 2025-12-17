@@ -1,0 +1,74 @@
+name: mysql-container
+
+on:
+    workflow_call:
+        secrets:
+            MYSQL_ROOT_PASSWORD:
+                required: true
+            MYSQL_DATABASE:
+                required: true
+            MYSQL_USER:
+                required: true
+            MYSQL_PASSWORD:
+                required: true
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    mysql-setup:
+        name: Start MySQL and health check
+        runs-on: ubuntu-latest
+        services:
+            mysql:
+                image: mysql:8
+                env:
+                    MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+                    MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+                    MYSQL_USER: ${{ secrets.MYSQL_USER }}
+                    MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD}"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+        steps:
+            - name: Checkout repository (needed if scripts or migrations exist)
+              uses: actions/checkout@v4
+
+            - name: Wait for MySQL to be ready
+              env:
+                  MYSQL_PWD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+              run: |
+                  set -euo pipefail
+                  for attempt in {1..15}; do
+                    if mysqladmin ping -h 127.0.0.1 -uroot --silent; then
+                      echo "MySQL is ready"
+                      exit 0
+                    fi
+                    echo "Waiting for MySQL (attempt ${attempt})"
+                    sleep 5
+                  done
+                  echo "MySQL did not become ready in time" >&2
+                  exit 1
+
+            - name: Healthcheck query
+              env:
+                  MYSQL_PWD: ${{ secrets.MYSQL_PASSWORD }}
+              run: |
+                  set -euo pipefail
+                  mysql -h 127.0.0.1 -u"${{ secrets.MYSQL_USER }}" -e "SELECT 1;"
+
+            - name: (Optional) Run migrations if available
+              if: hashFiles('Database/DeltaScripts/*.sql') != ''
+              env:
+                  MYSQL_PWD: ${{ secrets.MYSQL_PASSWORD }}
+              run: |
+                  set -euo pipefail
+                  for file in Database/DeltaScripts/*.sql; do
+                    echo "Applying migration ${file}"
+                    mysql -h 127.0.0.1 -u"${{ secrets.MYSQL_USER }}" "${{ secrets.MYSQL_DATABASE }}" < "$file"
+                  done

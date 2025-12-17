@@ -1,0 +1,67 @@
+name: backend-build
+
+on:
+    workflow_call:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    build-and-test:
+        name: Build and test backend
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: PrimeDriveBackend
+                shell: bash
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Detect build tool
+              id: detect-build
+              run: |
+                  set -euo pipefail
+                  if [ -f "pom.xml" ]; then
+                    echo "tool=maven" >> "$GITHUB_OUTPUT"
+                  elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
+                    echo "tool=gradle" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "tool=unknown" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Set up JDK 21 (default)
+              if: steps.detect-build.outputs.tool != 'unknown'
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 21
+                  cache: ${{ steps.detect-build.outputs.tool == 'maven' && 'maven' || 'gradle' }}
+                  cache-dependency-path: |
+                      PrimeDriveBackend/pom.xml
+                      PrimeDriveBackend/**/gradle-wrapper.properties
+
+            - name: Maven clean verify
+              if: steps.detect-build.outputs.tool == 'maven'
+              run: mvn -B -ntp clean verify
+
+            - name: Gradle clean build
+              if: steps.detect-build.outputs.tool == 'gradle'
+              run: |
+                  chmod +x gradlew
+                  ./gradlew clean build
+
+            - name: Upload JAR artifact (if produced)
+              if: steps.detect-build.outputs.tool == 'maven' && hashFiles('PrimeDriveBackend/target/*.jar') != ''
+              uses: actions/upload-artifact@v4
+              with:
+                  name: backend-jar
+                  path: PrimeDriveBackend/target/*.jar
+
+            - name: Build Docker image (optional)
+              if: hashFiles('PrimeDriveBackend/**/Dockerfile') != ''
+              run: |
+                  docker build -f Dockerfile -t backend:ci .
+              env:
+                  DOCKER_BUILDKIT: 1

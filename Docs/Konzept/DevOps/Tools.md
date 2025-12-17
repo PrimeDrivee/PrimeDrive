@@ -50,7 +50,10 @@ Dieses Dokument beschreibt die in PrimeDrive eingesetzten DevOps-Tools und deren
 - **OWASP Dependency-Check**  
   Analyse von Projektabhängigkeiten auf bekannte Sicherheitslücken.
 - **OWASP ZAP**  
-  Dynamischer Sicherheitstest (DAST) der laufenden Anwendung zur Erkennung von Web-Sicherheitsluecken.
+  Dynamischer Sicherheitstest (DAST) der laufenden Anwendung zur Erkennung von Web-Sicherheitsluecken.  
+  CI: Workflow `OWASP ZAP DAST` laeuft bei Pull Requests/Main-Pushes (Baseline) und woechentlich montags 03:00 UTC (Full Scan) bzw. manuell via `Actions > OWASP ZAP DAST`.  
+  Konfiguration: Secret/Variable `ZAP_TARGET_URL` (Pflicht, Ziel-URL), optional `ZAP_AUTH_HEADER` fuer Auth-Header sowie Grenzwerte `ZAP_MAX_HIGH_ALERTS` / `ZAP_MAX_MEDIUM_ALERTS` (Standard 0/0).  
+  Ergebnis: CI generiert HTML/XML/JSON/Markdown-Reports als Artefakt und bricht bei ueberschrittenen Grenzwerten ab.
 - **Trivy**  
   Open-Source Scanner für Container-Images, Dateisysteme und Abhaengigkeiten (SCA); Integration in CI zur frühen Schwachstellen-Erkennung.
 

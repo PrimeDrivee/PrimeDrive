@@ -1,14 +1,15 @@
 name: Backend Tests
 
 on:
+  workflow_call:
   push:
     paths:
-      - 'PrimeDriveBackend/**'
-      - '.github/workflows/backend-tests.yml'
+      - "PrimeDriveBackend/**"
+      - ".github/workflows/backend-tests.yml"
   pull_request:
     paths:
-      - 'PrimeDriveBackend/**'
-      - '.github/workflows/backend-tests.yml'
+      - "PrimeDriveBackend/**"
+      - ".github/workflows/backend-tests.yml"
 
 jobs:
   test-backend:
@@ -24,7 +25,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
           cache: maven
 
       - name: Run tests

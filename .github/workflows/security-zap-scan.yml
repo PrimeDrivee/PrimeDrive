@@ -1,0 +1,78 @@
+name: security-zap-scan
+
+on:
+    workflow_call:
+        inputs:
+            target_url:
+                required: true
+                type: string
+            zap_scan_type:
+                required: false
+                type: string
+                default: baseline
+        secrets:
+            ZAP_API_KEY:
+                required: false
+    workflow_dispatch:
+        inputs:
+            target_url:
+                description: URL to scan (e.g. http://localhost:8080)
+                required: true
+                type: string
+            zap_scan_type:
+                description: baseline or full
+                required: false
+                default: baseline
+                type: string
+
+permissions:
+    contents: read
+
+jobs:
+    zap-scan:
+        name: Run ZAP ${{ inputs.zap_scan_type || 'baseline' }} scan
+        runs-on: ubuntu-latest
+        env:
+            TARGET_URL: ${{ inputs.target_url }}
+            ZAP_SCAN_TYPE: ${{ inputs.zap_scan_type || 'baseline' }}
+            ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+        steps:
+            - name: Checkout repository (to store reports)
+              uses: actions/checkout@v4
+
+            - name: Run ZAP scan
+              run: |
+                  set -euo pipefail
+                  case "${ZAP_SCAN_TYPE}" in
+                    full)
+                      docker run --rm -v "$PWD:/zap/wrk:rw" -t owasp/zap2docker-stable \
+                        zap-full-scan.py \
+                        -t "${TARGET_URL}" \
+                        -m 3 \
+                        -d \
+                        -r zap-report.html \
+                        -x zap-report.xml \
+                        -J zap-report.json \
+                        ${ZAP_API_KEY:+-z "-config api.key=${ZAP_API_KEY}"}
+                      ;;
+                    *)
+                      docker run --rm -v "$PWD:/zap/wrk:rw" -t owasp/zap2docker-stable \
+                        zap-baseline.py \
+                        -t "${TARGET_URL}" \
+                        -m 3 \
+                        -d \
+                        -r zap-report.html \
+                        -x zap-report.xml \
+                        -J zap-report.json \
+                        ${ZAP_API_KEY:+-z "-config api.key=${ZAP_API_KEY}"}
+                      ;;
+                  esac
+
+            - name: Upload ZAP reports
+              uses: actions/upload-artifact@v4
+              with:
+                  name: zap-reports
+                  path: |
+                      zap-report.html
+                      zap-report.xml
+                      zap-report.json
