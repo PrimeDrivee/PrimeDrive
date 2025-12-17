@@ -10,7 +10,9 @@
     "test": "ng test --watch --browsers=Chrome",
     "test:ci": "CI=true ng test --watch=false --browsers=ChromeHeadless --code-coverage",
     "test:coverage": "npm run test:ci",
-    "docs": "npx compodoc -p tsconfig.app.json -d docs --theme angular"
+    "docs": "npx compodoc -p tsconfig.app.json -d docs --theme angular",
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write ."
   },
   "private": true,
   "dependencies": {
