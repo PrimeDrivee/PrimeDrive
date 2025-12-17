@@ -53,8 +53,8 @@ describe('RegisterDialogComponent', () => {
           new HttpErrorResponse({
             status: 500,
             error: 'fail',
-          }),
-      ),
+          })
+      )
     );
 
     component.register();
@@ -66,8 +66,8 @@ describe('RegisterDialogComponent', () => {
           new HttpErrorResponse({
             status: 0,
             error: new ErrorEvent('network', { message: 'down' }),
-          }),
-      ),
+          })
+      )
     );
     component.register();
     expect(consoleSpy).toHaveBeenCalledTimes(2);
@@ -95,9 +95,9 @@ describe('RegisterDialogComponent', () => {
 
     component.ngAfterViewChecked();
 
-    expect(
-      component.confirmPasswordModel.control.setErrors,
-    ).toHaveBeenCalledWith({ mismatch: true });
+    expect(component.confirmPasswordModel.control.setErrors).toHaveBeenCalledWith({
+      mismatch: true,
+    });
     expect(component.zipCodeModel.control.setErrors).toHaveBeenCalled();
     expect(component.phoneNumberModel.control.setErrors).toHaveBeenCalled();
   });
@@ -124,12 +124,8 @@ describe('RegisterDialogComponent', () => {
 
     component.ngAfterViewChecked();
 
-    expect(
-      component.confirmPasswordModel.control.setErrors,
-    ).toHaveBeenCalledWith(null);
+    expect(component.confirmPasswordModel.control.setErrors).toHaveBeenCalledWith(null);
     expect(component.zipCodeModel.control.setErrors).toHaveBeenCalledWith(null);
-    expect(component.phoneNumberModel.control.setErrors).toHaveBeenCalledWith(
-      null,
-    );
+    expect(component.phoneNumberModel.control.setErrors).toHaveBeenCalledWith(null);
   });
 });

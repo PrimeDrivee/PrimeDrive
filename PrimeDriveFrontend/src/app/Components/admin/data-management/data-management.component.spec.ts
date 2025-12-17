@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DataManagementComponent } from './data-management.component';
 import { VehiclesService } from '../../../Services/vehicles/vehicles.service';
 import { of, throwError } from 'rxjs';
@@ -47,7 +42,7 @@ const createVehiclesServiceSpy = () => {
   ] as const;
   const spy = jasmine.createSpyObj(
     'VehiclesService',
-    methods,
+    methods
   ) as any as jasmine.SpyObj<VehiclesService>;
   methods.forEach((name) => {
     if (name.startsWith('get')) {
@@ -70,11 +65,7 @@ describe('DataManagementComponent', () => {
     serviceSpy = createVehiclesServiceSpy();
 
     await TestBed.configureTestingModule({
-      imports: [
-        DataManagementComponent,
-        HttpClientTestingModule,
-        NoopAnimationsModule,
-      ],
+      imports: [DataManagementComponent, HttpClientTestingModule, NoopAnimationsModule],
       providers: [{ provide: VehiclesService, useValue: serviceSpy }],
     }).compileComponents();
 
@@ -185,9 +176,7 @@ describe('DataManagementComponent', () => {
     component.updateEngine();
     expect(serviceSpy.updateEngine).not.toHaveBeenCalled();
 
-    serviceSpy.updateColor.and.returnValue(
-      throwError(() => ({ error: { message: 'bad color' } })),
-    );
+    serviceSpy.updateColor.and.returnValue(throwError(() => ({ error: { message: 'bad color' } })));
     component.selectedColor = {
       id: 'c1',
       name: 'Red',
@@ -198,7 +187,7 @@ describe('DataManagementComponent', () => {
     expect(component.errorMessageUpdate).toBe('bad color');
 
     serviceSpy.createHolding.and.returnValue(
-      throwError(() => ({ error: { message: 'fail holding' } })),
+      throwError(() => ({ error: { message: 'fail holding' } }))
     );
     component.holdingForm.patchValue({
       name: 'Hold',
@@ -315,9 +304,7 @@ describe('DataManagementComponent', () => {
     component.fetchFuelByName();
     expect(component.selectedFuel).toBeNull();
 
-    component.holdings = [
-      { id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any,
-    ];
+    component.holdings = [{ id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any];
     component.searchedHoldingName = 'other';
     component.fetchHoldingByName();
     expect(component.selectedHolding).toBeNull();
@@ -347,8 +334,7 @@ describe('DataManagementComponent', () => {
   });
 
   it('handles backend errors across entities', () => {
-    const error$ = (msg: string) =>
-      throwError(() => ({ error: { message: msg } }));
+    const error$ = (msg: string) => throwError(() => ({ error: { message: msg } }));
 
     serviceSpy.updateDoors.and.returnValue(error$('doors'));
     component.selectedDoors = { id: 'd1', quantity: 4 } as any;
@@ -730,9 +716,7 @@ describe('DataManagementComponent', () => {
     component.deleteFuel('f1');
 
     // Holding
-    component.holdings = [
-      { id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any,
-    ];
+    component.holdings = [{ id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any];
     component.searchedHoldingName = 'hold';
     component.fetchHoldingByName();
     component.holdingUpdateForm.patchValue({

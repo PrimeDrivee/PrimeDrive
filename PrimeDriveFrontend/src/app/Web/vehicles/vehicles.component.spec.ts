@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { VehiclesComponent } from './vehicles.component';
 import { VehiclesService } from '../../Services/vehicles/vehicles.service';
 import { of, throwError } from 'rxjs';
@@ -96,37 +91,23 @@ describe('VehiclesComponent', () => {
         holdingId: 'h1',
         founding: 2000,
         logo: '',
-      } as any),
+      } as any)
     );
-    serviceSpy.getTypeById.and.returnValue(
-      of({ id: 't1', type: 'SUV' } as any),
-    );
+    serviceSpy.getTypeById.and.returnValue(of({ id: 't1', type: 'SUV' } as any));
     serviceSpy.getColorById.and.returnValue(
-      of({ id: 'c1', name: 'Red', hexCode: '#ff0000' } as any),
+      of({ id: 'c1', name: 'Red', hexCode: '#ff0000' } as any)
     );
     serviceSpy.getSpecsById.and.returnValue(of(specs));
-    serviceSpy.getDoorsById.and.returnValue(
-      of({ id: 'd1', quantity: 4 } as any),
-    );
-    serviceSpy.getEngineById.and.returnValue(
-      of({ id: 'e1', engineType: 'V8' } as any),
-    );
-    serviceSpy.getFuelById.and.returnValue(
-      of({ id: 'f1', fuelType: 'Gas' } as any),
-    );
-    serviceSpy.getSeatsById.and.returnValue(
-      of({ id: 'se1', quantity: 5 } as any),
-    );
+    serviceSpy.getDoorsById.and.returnValue(of({ id: 'd1', quantity: 4 } as any));
+    serviceSpy.getEngineById.and.returnValue(of({ id: 'e1', engineType: 'V8' } as any));
+    serviceSpy.getFuelById.and.returnValue(of({ id: 'f1', fuelType: 'Gas' } as any));
+    serviceSpy.getSeatsById.and.returnValue(of({ id: 'se1', quantity: 5 } as any));
     serviceSpy.getHoldingById.and.returnValue(
-      of({ id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any),
+      of({ id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any)
     );
 
     await TestBed.configureTestingModule({
-      imports: [
-        VehiclesComponent,
-        RouterTestingModule.withRoutes([]),
-        NoopAnimationsModule,
-      ],
+      imports: [VehiclesComponent, RouterTestingModule.withRoutes([]), NoopAnimationsModule],
       providers: [{ provide: VehiclesService, useValue: serviceSpy }],
     }).compileComponents();
 
@@ -309,7 +290,7 @@ describe('VehiclesComponent', () => {
 
   it('skips color lookup when vehicle has no color id', fakeAsync(() => {
     serviceSpy.getVehicles.and.returnValue(
-      of([{ ...baseVehicle, colorsId: null as any } as Vehicle]),
+      of([{ ...baseVehicle, colorsId: null as any } as Vehicle])
     );
     const consoleSpy = spyOn(console, 'error');
 

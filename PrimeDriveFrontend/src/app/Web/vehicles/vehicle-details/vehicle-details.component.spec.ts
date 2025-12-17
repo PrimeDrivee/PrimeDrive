@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { VehicleDetailsComponent } from './vehicle-details.component';
 import { VehiclesService } from '../../../Services/vehicles/vehicles.service';
 import { ActivatedRoute } from '@angular/router';
@@ -39,14 +34,10 @@ const buildServiceSpy = () => {
       holdingId: 'h1',
       founding: 2000,
       logo: '',
-    } as any),
+    } as any)
   );
-  spy.getTypeById.and.returnValue(
-    of({ id: 't1', type: 'SUV', name: 'Type' } as any),
-  );
-  spy.getColorById.and.returnValue(
-    of({ id: 'c1', name: 'Red', hexCode: '#ff0000' } as any),
-  );
+  spy.getTypeById.and.returnValue(of({ id: 't1', type: 'SUV', name: 'Type' } as any));
+  spy.getColorById.and.returnValue(of({ id: 'c1', name: 'Red', hexCode: '#ff0000' } as any));
   spy.getSpecsById.and.returnValue(
     of({
       id: 's1',
@@ -54,7 +45,7 @@ const buildServiceSpy = () => {
       fuelsId: 'f1',
       doorsId: 'd1',
       seatsId: 'se1',
-    } as any),
+    } as any)
   );
   spy.getUserById.and.returnValue(of({ id: 'u1', username: 'seller' } as any));
   spy.getEngineById.and.returnValue(of({ id: 'e1', engineType: 'V8' } as any));
@@ -125,9 +116,7 @@ describe('VehicleDetailsComponent', () => {
 
   it('logs an error when fetching vehicle details fails', fakeAsync(() => {
     const errorSpy = spyOn(console, 'error');
-    serviceSpy.getVehicleById.and.returnValue(
-      throwError(() => new Error('fail')),
-    );
+    serviceSpy.getVehicleById.and.returnValue(throwError(() => new Error('fail')));
 
     fixture.detectChanges();
     tick();

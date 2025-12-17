@@ -15,9 +15,7 @@ describe('AppComponent (standalone)', () => {
     authMock.isAuthenticated.and.returnValue(of(false));
     authMock.logout.and.returnValue(of(void 0));
 
-    const usersMock = jasmine.createSpyObj<UsersService>('UsersService', [
-      'getCurrentUser',
-    ]);
+    const usersMock = jasmine.createSpyObj<UsersService>('UsersService', ['getCurrentUser']);
     usersMock.getCurrentUser.and.returnValue(of());
 
     const dialogMock = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);

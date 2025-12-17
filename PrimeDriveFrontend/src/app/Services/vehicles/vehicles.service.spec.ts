@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { VehiclesService } from './vehicles.service';
 import { Vehicle } from '../../Models/vehicles/vehicle.interface';
 import { Brand } from '../../Models/vehicles/brand.interface';
@@ -156,35 +153,25 @@ describe('VehiclesService', () => {
     http.expectOne(`${api}/vehicle_specs`).flush(specs);
 
     service.updateSpecs(specs).subscribe((body) => (collected['specs'] = body));
-    http
-      .expectOne(`${api}/vehicle_specs/${specs.id}`)
-      .flush({ ...specs, powerKw: 1 } as Specs);
+    http.expectOne(`${api}/vehicle_specs/${specs.id}`).flush({ ...specs, powerKw: 1 } as Specs);
 
     service.deleteSpecs(specs.id).subscribe();
     http.expectOne(`${api}/vehicle_specs/${specs.id}`).flush({});
 
     const engine = { id: 'e1', engineType: 'V8' } as any;
-    service
-      .getEngineById(engine.id)
-      .subscribe((body) => (collected['engine'] = body));
+    service.getEngineById(engine.id).subscribe((body) => (collected['engine'] = body));
     http.expectOne(`${api}/vehicle_engine/${engine.id}`).flush(engine);
     service.getEngines().subscribe((body) => (collected['engine'] = body));
     http.expectOne(`${api}/vehicle_engine`).flush([engine]);
-    service
-      .createEngine(engine)
-      .subscribe((body) => (collected['engine'] = body));
+    service.createEngine(engine).subscribe((body) => (collected['engine'] = body));
     http.expectOne(`${api}/vehicle_engine`).flush(engine);
-    service
-      .updateEngine(engine)
-      .subscribe((body) => (collected['engine'] = body));
+    service.updateEngine(engine).subscribe((body) => (collected['engine'] = body));
     http.expectOne(`${api}/vehicle_engine/${engine.id}`).flush(engine);
     service.deleteEngine(engine.id).subscribe();
     http.expectOne(`${api}/vehicle_engine/${engine.id}`).flush({});
 
     const fuel = { id: 'f1', fuelType: 'Gas' } as any;
-    service
-      .getFuelById(fuel.id)
-      .subscribe((body) => (collected['fuel'] = body));
+    service.getFuelById(fuel.id).subscribe((body) => (collected['fuel'] = body));
     http.expectOne(`${api}/vehicle_fuels/${fuel.id}`).flush(fuel);
     service.getFuels().subscribe((body) => (collected['fuel'] = body));
     http.expectOne(`${api}/vehicle_fuels`).flush([fuel]);
@@ -196,9 +183,7 @@ describe('VehiclesService', () => {
     http.expectOne(`${api}/vehicle_fuels/${fuel.id}`).flush({});
 
     const doors = { id: 'd1', quantity: 4 } as any;
-    service
-      .getDoorsById(doors.id)
-      .subscribe((body) => (collected['doors'] = body));
+    service.getDoorsById(doors.id).subscribe((body) => (collected['doors'] = body));
     http.expectOne(`${api}/vehicle_doors/${doors.id}`).flush(doors);
     service.getDoors().subscribe((body) => (collected['doors'] = body));
     http.expectOne(`${api}/vehicle_doors`).flush([doors]);
@@ -210,9 +195,7 @@ describe('VehiclesService', () => {
     http.expectOne(`${api}/vehicle_doors/${doors.id}`).flush({});
 
     const seats = { id: 'se1', quantity: 5 } as any;
-    service
-      .getSeatsById(seats.id)
-      .subscribe((body) => (collected['seats'] = body));
+    service.getSeatsById(seats.id).subscribe((body) => (collected['seats'] = body));
     http.expectOne(`${api}/vehicle_seats/${seats.id}`).flush(seats);
     service.getSeats().subscribe((body) => (collected['seats'] = body));
     http.expectOne(`${api}/vehicle_seats`).flush([seats]);
@@ -224,19 +207,13 @@ describe('VehiclesService', () => {
     http.expectOne(`${api}/vehicle_seats/${seats.id}`).flush({});
 
     const holding = { id: 'h1', name: 'Hold', logo: '', founding: 1990 } as any;
-    service
-      .getHoldingById(holding.id)
-      .subscribe((body) => (collected['holding'] = body));
+    service.getHoldingById(holding.id).subscribe((body) => (collected['holding'] = body));
     http.expectOne(`${api}/vehicle_holdings/${holding.id}`).flush([holding]);
     service.getHoldings().subscribe((body) => (collected['holding'] = body));
     http.expectOne(`${api}/vehicle_holdings`).flush([holding]);
-    service
-      .createHolding(holding)
-      .subscribe((body) => (collected['holding'] = body));
+    service.createHolding(holding).subscribe((body) => (collected['holding'] = body));
     http.expectOne(`${api}/vehicle_holdings`).flush(holding);
-    service
-      .updateHolding(holding)
-      .subscribe((body) => (collected['holding'] = body));
+    service.updateHolding(holding).subscribe((body) => (collected['holding'] = body));
     http.expectOne(`${api}/vehicle_holdings/${holding.id}`).flush(holding);
     service.deleteHolding(holding.id).subscribe();
     http.expectOne(`${api}/vehicle_holdings/${holding.id}`).flush({});

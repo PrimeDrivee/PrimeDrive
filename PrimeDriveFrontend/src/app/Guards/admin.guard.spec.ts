@@ -68,9 +68,7 @@ describe('AdminGuard (class)', () => {
   });
 
   it('redirects when fetching user fails', async () => {
-    usersServiceMock.getCurrentUser.and.returnValue(
-      throwError(() => new Error('network')),
-    );
+    usersServiceMock.getCurrentUser.and.returnValue(throwError(() => new Error('network')));
 
     const result = await guard.canActivate();
 
@@ -111,9 +109,7 @@ describe('adminGuard (functional)', () => {
     };
     usersServiceMock.getCurrentUser.and.returnValue(of(adminUser));
 
-    const result = await TestBed.runInInjectionContext(() =>
-      adminGuard({} as any, {} as any),
-    );
+    const result = await TestBed.runInInjectionContext(() => adminGuard({} as any, {} as any));
 
     expect(result).toBeTrue();
   });
@@ -135,9 +131,7 @@ describe('adminGuard (functional)', () => {
     };
     usersServiceMock.getCurrentUser.and.returnValue(of(nonAdmin));
 
-    const result = await TestBed.runInInjectionContext(() =>
-      adminGuard({} as any, {} as any),
-    );
+    const result = await TestBed.runInInjectionContext(() => adminGuard({} as any, {} as any));
 
     expect(result).toBe(urlTree);
   });
