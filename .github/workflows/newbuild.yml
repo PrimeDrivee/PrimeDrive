@@ -5,15 +5,16 @@ on:                    # Schritt 3: Trigger
     branches: [ "main" ]
     tags:
       - "v*.*.*"       # SemVer-Tags wie v1.0.0
- defaults:
-      run:
-        working-directory: frontend 
+
 
 
 jobs:                   # Schritt 4: Jobs definieren
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: frontend 
     steps:              # Schritt 5: Schritte im Job
       - name: Checkout Repository
         uses: actions/checkout@v4
