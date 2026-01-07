@@ -5,6 +5,10 @@ on:                    # Schritt 3: Trigger
     branches: [ "main" ]
     tags:
       - "v*.*.*"       # SemVer-Tags wie v1.0.0
+ defaults:
+      run:
+        working-directory: frontend 
+
 
 jobs:                   # Schritt 4: Jobs definieren
   build:
