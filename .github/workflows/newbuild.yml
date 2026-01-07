@@ -21,7 +21,7 @@ jobs:                   # Schritt 4: Jobs definieren
           # cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Angular App
         run: npm run build -- --configuration production
