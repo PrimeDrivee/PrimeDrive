@@ -96,10 +96,7 @@ jobs:
         continue-on-error: true
         working-directory: PrimeDriveFrontend
         run: |
-          echo "⚠️ NOTE: GitHub Packages requires a Personal Access Token."
-          echo "To enable publishing, create a PAT and add it as PUBLISH_TOKEN secret."
-          echo "For now, artifacts are available as GitHub Release assets."
-          npm publish --registry https://Publishing requires a Personal Access Token (PAT)"
+          echo "⚠️ NOTE: GitHub Packages Publishing requires a Personal Access Token (PAT)"
           echo "For now, artifacts are available as GitHub Actions workflow artifacts"
           npm publish --registry https://npm.pkg.github.com/ 2>&1 | grep -i "error\|success\|published" || true
         env:
@@ -111,7 +108,10 @@ jobs:
           name: primedrive-frontend-dist-${{ github.ref_name }}
           path: PrimeDriveFrontend/dist/
           retention-days: 90
+
+  build-complete:
+    needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
     steps:
       - name: Build Complete
-        run: echo "Build erfolgreich abgeschlossen!"
+        run: echo "✅ Build erfolgreich abgeschlossen!"
