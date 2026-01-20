@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.primedrive</groupId>
 	<artifactId>primedrive-backend</artifactId>
-	<version>0.1.0</version>
+	<version>${revision}</version>
 	<name>PrimeDriveBackend</name>
 	<description>Backend API for PrimeDrive - Cloud Storage Application</description>
 	<url>https://github.com/PrimeDrivee/PrimeDrive</url>
@@ -39,6 +39,7 @@
 	</distributionManagement>
 	<properties>
 		<java.version>21</java.version>
+		<revision>0.1.0</revision>
 	</properties>
 	<dependencies>
 
