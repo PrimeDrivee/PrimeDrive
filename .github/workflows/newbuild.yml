@@ -1,21 +1,39 @@
-name: Artefakt-Build  # Schritt 2: Workflow Name
+name: Artefakt-Build
 
-on:                    # Schritt 3: Trigger
+on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     tags:
-      - "v*.*.*"       # SemVer-Tags wie v1.0.0
+      - "v*.*.*"
 
-
-
-jobs:                   # Schritt 4: Jobs definieren
-  build:
+jobs:
+  build-backend:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    defaults:
-      run:
-        working-directory: frontend 
-    steps:              # Schritt 5: Schritte im Job
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build Backend
+        working-directory: PrimeDriveBackend
+        run: ./mvnw clean package -DskipTests
+
+      - name: Upload Backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-${{ github.ref_name }}-${{ github.sha }}
+          path: PrimeDriveBackend/target/*.jar
+          retention-days: 14
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -23,11 +41,27 @@ jobs:                   # Schritt 4: Jobs definieren
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache: npm
+          cache: npm
+          cache-dependency-path: PrimeDriveFrontend/package-lock.json
 
-      - name: Upload build artifact
+      - name: Install dependencies
+        working-directory: PrimeDriveFrontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: PrimeDriveFrontend
+        run: npm run build
+
+      - name: Upload Frontend artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-${{ github.ref_name }}-${{ github.sha }}
-          path: dist/
+          path: PrimeDriveFrontend/dist/
           retention-days: 14
+
+  build-complete:
+    needs: [build-backend, build-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Complete
+        run: echo "Build erfolgreich abgeschlossen!"
