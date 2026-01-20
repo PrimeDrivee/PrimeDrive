@@ -1,6 +1,6 @@
 {
-  "name": "@primedrivee/primedrive-frontend",
-  "version": "0.1.0",
+  "name": "primedrive-frontend",
+  "version": "0.1.1",
   "description": "Frontend for PrimeDrive - Cloud Storage Application",
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   },
   "private": false,
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
     "@angular/animations": "^17.3.0",
