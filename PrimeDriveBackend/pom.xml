@@ -8,24 +8,35 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>PrimeDriveBackend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>com.primedrive</groupId>
+	<artifactId>primedrive-backend</artifactId>
+	<version>0.1.0</version>
 	<name>PrimeDriveBackend</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
+	<description>Backend API for PrimeDrive - Cloud Storage Application</description>
+	<url>https://github.com/PrimeDrivee/PrimeDrive</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>PrimeDrive Team</name>
+		</developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection>scm:git:https://github.com/PrimeDrivee/PrimeDrive.git</connection>
+		<developerConnection>scm:git:git@github.com:PrimeDrivee/PrimeDrive.git</developerConnection>
+		<tag>main</tag>
+		<url>https://github.com/PrimeDrivee/PrimeDrive</url>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/PrimeDrivee/PrimeDrive</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
