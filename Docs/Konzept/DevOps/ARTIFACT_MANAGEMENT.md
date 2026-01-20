@@ -1,0 +1,473 @@
+# 📦 Artefaktverwaltung (Artifact Management)
+
+Dieses Dokument beschreibt die Strategie und Implementierung der Artefaktverwaltung im PrimeDrive-Projekt.
+
+---
+
+## 🏗️ Architektur-Überblick
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Git Repository (GitHub)                    │
+├─────────────────────────────────────────────────────────────┤
+│                      CI/CD Pipeline                          │
+│  (GitHub Actions Workflows: build & publish)                 │
+├─────────────────────────────────────────────────────────────┤
+│               GitHub Packages Registry                        │
+│  ├─ Maven Repository (Java Backend)                          │
+│  └─ npm Registry (Angular Frontend)                          │
+├─────────────────────────────────────────────────────────────┤
+│              Download / Dependency Management                 │
+│  ├─ Maven (pom.xml)                                          │
+│  └─ npm (package.json)                                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 1️⃣ Artefakt-Repository
+
+### Gewählte Lösung: **GitHub Packages**
+
+#### Begründung:
+
+- ✅ **Integriert mit GitHub**: Kein separates Tool erforderlich
+- ✅ **Kostenlos**: Für öffentliche und private Repositories
+- ✅ **Token-basierte Authentifizierung**: Einfach mit GitHub Actions zu integrieren
+- ✅ **Unterstützt Multiple Formate**: Maven, npm, Docker, etc.
+- ✅ **RBAC**: Granulare Zugriffskontrolle über GitHub Teams
+
+#### Alternativen (evaluiert):
+
+| Repository          | Vorteile                                  | Nachteile                                      |
+| ------------------- | ----------------------------------------- | ---------------------------------------------- |
+| **Nexus**           | Enterprise-Features, Multi-Format Support | Selbstgehostet, komplexe Setup, Kostenintensiv |
+| **Artifactory**     | Powerful, viele Plugins                   | Teuer, overkill für Schulprojekt               |
+| **GitLab**          | Schön, GitLab-integriert                  | Nicht relevant (GitHub wird genutzt)           |
+| **GitHub Packages** | ✅ **Gewählt**                            | Weniger Features als Nexus/Artifactory         |
+
+---
+
+## 2️⃣ Versionierungsstrategie
+
+### Semantic Versioning (SemVer) 2.0.0
+
+**Format:** `MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]`
+
+#### Regeln:
+
+- **MAJOR**: Inkompatible API-Änderungen
+- **MINOR**: Neue Funktionalität (rückwärts-kompatibel)
+- **PATCH**: Bugfixes und Patches
+- **PRERELEASE** (optional): `alpha`, `beta`, `rc`
+- **BUILD** (optional): `build.123`, `git.abc123f`
+
+#### Beispiele:
+
+```
+1.0.0          → Release
+1.0.1          → Patch-Release (Bugfix)
+1.1.0          → Minor-Release (neue Feature)
+2.0.0          → Major-Release (Breaking Change)
+1.0.0-alpha    → Alpha-Version
+1.0.0-beta.1   → Beta-Version 1
+1.0.0-rc.1     → Release Candidate
+```
+
+#### Release-Zyklus:
+
+```
+main (stable)
+├─ v0.1.0 ─────► Release Tag
+├─ v0.2.0 ─────► Release Tag
+└─ v1.0.0 ─────► Major Release Tag
+
+feature/ branches
+├─ feature/OPS-004 (dev work)
+└─ v1.0.0-beta.1 (pre-release)
+```
+
+---
+
+## 3️⃣ Implementierung
+
+### A) Backend (Java / Maven)
+
+#### pom.xml Konfiguration
+
+```xml
+<groupId>com.primedrive</groupId>
+<artifactId>primedrive-backend</artifactId>
+<version>0.1.0</version>
+
+<distributionManagement>
+  <repository>
+    <id>github</id>
+    <name>GitHub Packages</name>
+    <url>https://maven.pkg.github.com/PrimeDrivee/PrimeDrive</url>
+  </repository>
+</distributionManagement>
+```
+
+#### settings.xml (lokal/CI)
+
+Automatisch per GitHub Actions mit `GITHUB_TOKEN` authentifiziert.
+
+#### Publishing
+
+```bash
+# Lokal (mit GitHub Token)
+export GITHUB_ACTOR=<username>
+export GITHUB_TOKEN=<personal-access-token>
+mvn deploy -DskipTests
+
+# CI/CD (automatisch via GitHub Actions)
+```
+
+---
+
+### B) Frontend (Angular / npm)
+
+#### package.json Konfiguration
+
+```json
+{
+  "name": "@primedrivee/primedrive-frontend",
+  "version": "0.1.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
+```
+
+#### .npmrc (lokal/CI)
+
+```plaintext
+@primedrivee:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=<GITHUB_TOKEN>
+```
+
+#### Publishing
+
+```bash
+# Lokal
+npm publish
+
+# CI/CD (automatisch via GitHub Actions)
+```
+
+---
+
+## 4️⃣ CI/CD Integration
+
+### GitHub Actions Workflow
+
+**Trigger:** Push zu `main` oder Tags matching `v*.*.*`
+
+```yaml
+on:
+  push:
+    branches: ["main"]
+    tags:
+      - "v*.*.*"
+```
+
+#### Backend Publishing Steps
+
+```yaml
+- name: Publish Backend to GitHub Packages
+  if: startsWith(github.ref, 'refs/tags/v')
+  working-directory: PrimeDriveBackend
+  run: ./mvnw deploy -DskipTests
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+#### Frontend Publishing Steps
+
+```yaml
+- name: Publish Frontend to GitHub Packages
+  if: startsWith(github.ref, 'refs/tags/v')
+  working-directory: PrimeDriveFrontend
+  run: npm publish
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
+## 5️⃣ Release-Prozess (Checkliste)
+
+### Schritt 1: Vorbereitung
+
+- [ ] Alle Features in `main` gemergt
+- [ ] Tests erfolgreich durchgelaufen (`npm run test:ci`)
+- [ ] Dokumentation aktualisiert
+- [ ] CHANGELOG.md aktualisiert
+
+### Schritt 2: Versionierung
+
+- [ ] Version in `PrimeDriveBackend/pom.xml` erhöhen
+- [ ] Version in `PrimeDriveFrontend/package.json` erhöhen
+- [ ] Commit: `git commit -am "Release v0.1.0"`
+
+### Schritt 3: Tag erstellen
+
+```bash
+git tag -a v0.1.0 -m "Release version 0.1.0"
+git push origin v0.1.0
+```
+
+### Schritt 4: Automatisches Publishing
+
+- [ ] GitHub Actions Workflow startet automatisch
+- [ ] Backend wird zu GitHub Packages (Maven) published
+- [ ] Frontend wird zu GitHub Packages (npm) published
+- [ ] Artifacts sind unter Releases verfügbar
+
+### Schritt 5: Verifikation
+
+- [ ] GitHub Release anschauen
+- [ ] Maven Artifact in Packages sichtbar
+- [ ] npm Packet in Packages sichtbar
+
+---
+
+## 6️⃣ Verwendung der Artefakte
+
+### Backend-Abhängigkeit (andere Projekte)
+
+**pom.xml:**
+
+```xml
+<repository>
+  <id>github</id>
+  <name>GitHub Packages</name>
+  <url>https://maven.pkg.github.com/PrimeDrivee/PrimeDrive</url>
+</repository>
+
+<dependency>
+  <groupId>com.primedrive</groupId>
+  <artifactId>primedrive-backend</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+**settings.xml:**
+
+```xml
+<server>
+  <id>github</id>
+  <username>USERNAME</username>
+  <password>PERSONAL_ACCESS_TOKEN</password>
+</server>
+```
+
+### Frontend-Abhängigkeit (andere Projekte)
+
+**package.json:**
+
+```json
+{
+  "dependencies": {
+    "@primedrivee/primedrive-frontend": "0.1.0"
+  }
+}
+```
+
+**.npmrc:**
+
+```plaintext
+@primedrivee:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=GITHUB_TOKEN
+```
+
+---
+
+## 7️⃣ Best Practices
+
+### ✅ Zu beachten
+
+1. **Versionierung konsistent halten**
+   - Backend und Frontend auf gleiche Version synchronisieren
+   - Nur bei kompatiblen Releases veröffentlichen
+
+2. **CHANGELOG pflegen**
+
+   ```
+   ## [0.1.0] - 2026-01-21
+   ### Added
+   - Initial release
+   - Jasmine testing setup
+
+   ### Fixed
+   - TypeScript build issues
+   ```
+
+3. **Git Tags nutzen**
+   - Immer mit `v` prefix taggen: `v0.1.0`
+   - Annotated Tags: `git tag -a v0.1.0 -m "message"`
+
+4. **Tokens sicher verwalten**
+   - `GITHUB_TOKEN` wird automatisch in CI/CD injiziert
+   - Lokal: Personal Access Token mit `packages:read` permission
+
+5. **Snapshot vs Release**
+   - Aktuell nur Release-Versionen in GitHub Packages
+   - Snapshot-Versions (`-SNAPSHOT`) werden nicht published
+
+### ⚠️ Zu vermeiden
+
+- ❌ Mehrere Versionen in parallel publishen (verwirrend)
+- ❌ Versionsnummern unterschiedlich zwischen Frontend/Backend
+- ❌ Direkte Commits zu `main` (nur über Pull Requests)
+- ❌ Token in Logs oder Code committen
+
+---
+
+## 8️⃣ Monitoring & Wartung
+
+### Repository-Status überprüfen
+
+**GitHub UI:** `PrimeDrive` → `Packages`
+
+### Abhängigkeiten aktualisieren
+
+```bash
+# Backend
+cd PrimeDriveBackend
+./mvnw dependency:update-snapshots
+
+# Frontend
+cd PrimeDriveFrontend
+npm outdated
+npm update
+```
+
+### Alte Versionen löschen
+
+GitHub UI → Packages → Version → Delete
+
+---
+
+## 9️⃣ Troubleshooting
+
+### Maven / Backend Publishing-Fehler
+
+#### **403 Forbidden** bei Maven Deploy
+
+**Problem:** `Failed to deploy artifacts: status code: 403, reason phrase: Forbidden (403)`
+
+**Ursachen:**
+
+- `GITHUB_TOKEN` hat keine ausreichenden Permissions
+- `settings.xml` wird nicht korrekt erstellt
+- Authentifizierung wird nicht an Maven übergeben
+
+**Lösungen:**
+
+1. **settings.xml Debug:** Überprüfen Sie, ob die Datei unter `$HOME/.m2/settings.xml` erstellt wird
+
+   ```bash
+   cat ~/.m2/settings.xml
+   ```
+
+2. **Umgebungsvariablen prüfen:** Stellen Sie sicher, dass `GITHUB_ACTOR` und `GITHUB_TOKEN` gesetzt sind
+
+   ```bash
+   echo $GITHUB_ACTOR
+   echo $GITHUB_TOKEN
+   ```
+
+3. **Token-Permissions:** Der Token braucht mindestens diese Scopes:
+   - `write:packages`
+   - `read:packages`
+
+   ⚠️ **Hinweis:** Der automatische `GITHUB_TOKEN` in GitHub Actions kann manchmal zu Permissions-Problemen führen.
+
+4. **Alternative:** Verwenden Sie einen **Personal Access Token (PAT)** statt `GITHUB_TOKEN`:
+
+   ```bash
+   Settings → Developer settings → Personal access tokens → Generate new token
+   # Scopes: write:packages, read:packages
+   # Speichern Sie ihn als Repository Secret: PUBLISH_TOKEN
+   ```
+
+   Dann im Workflow anpassen:
+
+   ```yaml
+   env:
+     GITHUB_ACTOR: ${{ github.actor }}
+     GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+   ```
+
+---
+
+### npm / Frontend Publishing-Fehler
+
+#### **404 Not Found** bei npm publish
+
+**Problem:** `404 Not Found - PUT https://npm.pkg.github.com/primedrive-frontend`
+
+**Ursachen:**
+
+- npm ist nicht authentifiziert bei GitHub Packages
+- `.npmrc` nicht korrekt konfiguriert
+- Registry-URL nicht korrekt gesetzt
+
+**Lösungen:**
+
+1. **Lokal Testen:**
+
+   ```bash
+   cd PrimeDriveFrontend
+
+   # .npmrc überprüfen
+   cat .npmrc
+
+   # Token setzen
+   export NODE_AUTH_TOKEN=<GITHUB_TOKEN>
+
+   # Mit expliziter Registry publishen
+   npm publish --registry https://npm.pkg.github.com/
+   ```
+
+2. **Workflow-Debug:** `npm config` vor publish aufrufen
+
+   ```yaml
+   - name: Debug npm config
+     run: npm config list
+
+   - name: Publish
+     run: npm publish --registry https://npm.pkg.github.com/ -d
+   ```
+
+3. **Alternative: Ghcr.io nutzen** (Docker-basiert)
+   - Wenn npm Publishing problematisch bleibt, können Sie die Anwendung auch als Docker-Image publishen
+
+---
+
+### Allgemeine Tipps
+
+| Fehler                      | Debug-Befehl                                           |
+| --------------------------- | ------------------------------------------------------ |
+| Maven nicht authentifiziert | `./mvnw deploy -X` (Enable debug logging)              |
+| npm nicht authentifiziert   | `npm publish -d` (Debug mode)                          |
+| Settings nicht gefunden     | `ls -la ~/.m2/`                                        |
+| Token abgelaufen            | Repository Settings → Secrets and variables überprüfen |
+
+---
+
+## 🔟 Referenzen
+
+- [GitHub Packages Documentation](https://docs.github.com/en/packages)
+- [GitHub Actions Secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
+- [Semantic Versioning 2.0.0](https://semver.org/)
+- [Maven Deployment Guide](https://maven.apache.org/guides/mini/guide-deployment-to-a-central-mirror.html)
+- [npm publish Documentation](https://docs.npmjs.com/cli/v9/commands/npm-publish)
+
+---
+
+**Version:** 1.0.0  
+**Letztes Update:** 21. Januar 2026  
+**Autoren:** PrimeDrive Team
