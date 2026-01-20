@@ -458,9 +458,239 @@ GitHub UI → Packages → Version → Delete
 
 ---
 
+## 🔟 Artefaktverwaltung - Operativer Betrieb
+
+### 10.1 Nutzung und Wiederverwendung von Artefakten
+
+#### Build-Artefakte beziehen
+
+**GitHub Actions Artifacts:**
+
+```
+Repository → Actions → [Workflow Name] → Artifacts
+```
+
+**Download-Optionen:**
+
+1. **Web UI**: Einzelnes Artifact herunterladen
+2. **CLI**: `gh run download <RUN_ID> -n <ARTIFACT_NAME>`
+3. **Programmatisch**: GitHub API verwenden
+
+#### Wiederverwendung in lokaler Entwicklung
+
+**Backend JAR verwenden:**
+
+```bash
+cd PrimeDriveFrontend
+
+# JAR in lokal entwickeltem Frontend testen
+java -jar primedrive-backend-0.1.9.jar
+```
+
+**Frontend Build verwenden:**
+
+```bash
+# Downloaded dist/ Folder in Static Server deployen
+cd primedrive-frontend-dist-v0.1.9
+python -m http.server 8080
+```
+
+#### Abhängigkeitsmanagement
+
+**Backend - Maven Dependency mit lokalem JAR:**
+
+```xml
+<!-- Falls veröffentlicht zu GitHub Packages -->
+<dependency>
+  <groupId>com.primedrive</groupId>
+  <artifactId>primedrive-backend</artifactId>
+  <version>0.1.9</version>
+</dependency>
+```
+
+**Frontend - npm Dependency mit veröffentlichtem Package:**
+
+```json
+{
+  "dependencies": {
+    "primedrive-frontend": "0.1.9"
+  }
+}
+```
+
+---
+
+### 10.2 Maintenance & Cleanup-Strategie
+
+#### Automatische Retention Policies
+
+**GitHub Actions Artifacts:**
+
+- **Retention**: 90 Tage (eingestellt im Workflow)
+- **Automatisches Löschen**: Nach 90 Tagen
+
+**GitHub Releases** (wenn später aktiviert):
+
+- **Retention**: Unbegrenzt (manuelle Verwaltung)
+- **Speicherplatz**: Kostenlos für öffentliche Repos
+
+#### Manuelle Cleanup-Operationen
+
+**GitHub UI - Artifacts löschen:**
+
+```
+1. Repository → Actions
+2. [Workflow Run] → Artifacts
+3. [Artifact] → Delete
+```
+
+**GitHub UI - alte Releases löschen:**
+
+```
+1. Repository → Releases
+2. [Release] → Delete
+3. Confirm
+```
+
+**CLI - Artifacts löschen:**
+
+```bash
+# Alle Artifacts eines Workflows löschen
+gh run list --workflow=newbuild.yml --limit=10 | grep COMPLETED
+gh run delete <RUN_ID>
+
+# Oder einzelnes Artifact
+gh run download <RUN_ID> --name primedrive-backend-v0.1.0
+# manuell löschen
+```
+
+#### Cleanup-Scheduling
+
+**Wöchentliches Cleanup (optional):**
+
+```yaml
+# .github/workflows/cleanup-artifacts.yml
+name: Weekly Artifact Cleanup
+
+on:
+  schedule:
+    - cron: "0 3 * * 0" # Sunday 3 AM UTC
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old artifacts
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: "*"
+          failOnError: false
+```
+
+---
+
+### 10.3 Qualitätssicherung & Audit
+
+#### Prüf-Checkliste (monatlich)
+
+- [ ] **Größe überprüfen**:
+
+  ```bash
+  du -sh ~/.m2/repository/com/primedrive/
+  du -sh ~/.npm/primedrive*
+  ```
+
+- [ ] **Versionierung konsistent**:
+  - Backend und Frontend auf gleiche Version
+  - SemVer Format eingehalten
+
+- [ ] **Alte Versionen identifizieren**:
+  - Older as 6 months: candidates for deletion
+  - Unused versions: remove
+
+- [ ] **Abhängigkeitsupdate überprüfen**:
+
+  ```bash
+  mvn dependency:tree | grep SNAPSHOT  # sollte leer sein
+  npm outdated                          # sollte leer oder geplant sein
+  ```
+
+- [ ] **Artifakt-Integrität prüfen**:
+
+  ```bash
+  # Backend JAR Test
+  java -jar primedrive-backend-*.jar --version
+
+  # Frontend Build Test
+  ls primedrive-frontend-dist-*/dist/index.html
+  ```
+
+#### Audit-Bericht Template
+
+```markdown
+# Artefakt-Audit Report
+
+**Datum:** 2026-01-28
+**Durchgeführt von:** [Name]
+
+## Größen-Übersicht
+
+- Backend Repository: [size]
+- Frontend Repository: [size]
+- Total: [size]
+
+## Versionen vorhanden
+
+- Backend: v0.1.0 - v0.1.9 (9 versions)
+- Frontend: v0.1.1 - v0.1.9 (9 versions)
+
+## Zu löschende Versionen
+
+- Keine (alle aktiv verwendet)
+
+## Recommendations
+
+- [Details]
+```
+
+---
+
+### 10.4 Disaster Recovery
+
+#### Artefakt-Wiederherstellung
+
+**Wenn ein Artefakt gelöscht wurde:**
+
+1. Git History überprüfen: `git log --all`
+2. Tag überprüfen: `git tag -l v*`
+3. **Neu builden**: `git checkout v0.1.5 && ./mvnw clean package`
+
+**Wenn GitHub Actions gelöscht wurde:**
+
+1. Lokal über Git Tag neu builden
+2. Oder aus Docker Image (falls verfügbar)
+
+#### Backup-Strategie
+
+**Empfohlen - monatlich durchführen:**
+
+```bash
+# Alle Artefakte lokal archivieren
+mkdir -p ./artifact-backups/$(date +%Y-%m)
+gh run list --workflow=newbuild.yml --limit=100 | while read line; do
+  gh run download $(echo $line | awk '{print $1}') -D ./artifact-backups/$(date +%Y-%m)/
+done
+
+# Archivieren
+tar -czf artifact-backups-$(date +%Y-%m).tar.gz ./artifact-backups/
+```
+
+---
+
 ## 🔟 Referenzen
 
 - [GitHub Packages Documentation](https://docs.github.com/en/packages)
+- [GitHub Actions Artifacts](https://docs.github.com/en/actions/managing-workflow-runs/about-workflow-runs#artifacts)
 - [GitHub Actions Secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
 - [Semantic Versioning 2.0.0](https://semver.org/)
 - [Maven Deployment Guide](https://maven.apache.org/guides/mini/guide-deployment-to-a-central-mirror.html)
@@ -468,6 +698,6 @@ GitHub UI → Packages → Version → Delete
 
 ---
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Letztes Update:** 21. Januar 2026  
 **Autoren:** PrimeDrive Team
