@@ -55,9 +55,8 @@ jobs:
         working-directory: PrimeDriveBackend
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          echo "⚠️ NOTE: GitHub Packages Publishing requires a Personal Access Token (PAT)"
-          echo "For now, artifacts are available as GitHub Actions workflow artifacts"
-          ./mvnw deploy -DskipTests -Drevision=$VERSION 2>&1 | grep -i "error\|success\|deployed" || true
+          echo "⚠️ GitHub Packages requires Personal Access Token - skipping Maven deploy"
+          echo "Artifacts will be available in GitHub Actions workflow artifacts"
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ env.PUBLISH_TOKEN }}
@@ -97,9 +96,8 @@ jobs:
         working-directory: PrimeDriveFrontend
         run: |
           echo "⚠️ NOTE: GitHub Packages Publishing requires a Personal Access Token (PAT)"
-          echo "For now, artifacts are available as GitHub Actions workflow artifacts"
-          npm publish --registry https://npm.pkg.github.com/ 2>&1 | grep -i "error\|success\|published" || true
-        env:
+          echo "ForGitHub Packages requires Personal Access Token - skipping npm publish"
+          echo "Artifacts will be available in GitHub Actions workflow artifacts"
           NODE_AUTH_TOKEN: ${{ env.PUBLISH_TOKEN }}
 
       - name: Upload Frontend Artifact to Actions
