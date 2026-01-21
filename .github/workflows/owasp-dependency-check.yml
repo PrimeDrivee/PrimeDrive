@@ -1,0 +1,201 @@
+name: "OWASP Dependency-Check"
+
+on:
+  push:
+    branches: [main, "feature/**"] # Include feature branches so pushes run; adjust to your protected branch policy
+  pull_request:
+    branches: [main] # Adjust if your protected branch differs
+  schedule:
+    - cron: "0 3 * * *" # UTC; change to adjust scan cadence (e.g., weekly)
+
+jobs:
+  backend-dependency-check:
+    name: Backend Dependency-Check
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write # Needed for SARIF upload to Code Scanning
+
+    env:
+      JAVA_VERSION: "21" # LTS Java version
+      MAVEN_VERSION: "3.9.9" # Documented Maven version; align runner/tooling if it changes
+      DC_VERSION: "9.1.0" # Dependency-Check Maven plugin version
+      DC_FAIL_CVSS: "7.0" # Fail on High/Critical (CVSS >= threshold); change to adjust policy
+      DC_SUPPRESSION_FILE: dependency-check-suppression.xml # Optional suppression file at repo root; keep reasons/refs/expiry documented
+      REPORT_DIR: PrimeDriveBackend/target # Dependency-Check reports are written here
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }} # Recommended: set in repo secrets to avoid NVD 403/NoData errors
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Temurin JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+
+      - name: Show tool versions
+        run: |
+          java -version
+          mvn -version
+        shell: bash
+
+      - name: Build and run Dependency-Check (backend)
+        working-directory: PrimeDriveBackend
+        run: |
+          REPORT_PATH="${{ env.REPORT_DIR }}/dependency-check-report"
+          SUPPRESSION_PATH="${GITHUB_WORKSPACE}/${{ env.DC_SUPPRESSION_FILE }}"
+          SUPPRESSION_ARG=""
+          NVD_ARG=""
+
+          if [[ -f "$SUPPRESSION_PATH" ]]; then
+            echo "Using suppression file at $SUPPRESSION_PATH" # Maintain reasons/refs/expiry per suppression
+            SUPPRESSION_ARG="-DsuppressionFile=$SUPPRESSION_PATH"
+          else
+            echo "No suppression file found; add ${{ env.DC_SUPPRESSION_FILE }} to manage known false positives." # Suppression file hook
+          fi
+
+          if [[ -n "${{ env.NVD_API_KEY }}" ]]; then
+            echo "Using provided NVD API key to avoid rate limits." # Recommended per NVD
+            NVD_ARG="-Dnvd.api.key=${{ env.NVD_API_KEY }}"
+          else
+            echo "Warning: No NVD_API_KEY configured; downloads may be rate-limited (403/NoData). Set secrets.NVD_API_KEY." # NVD key hint
+          fi
+
+          mvn -B verify \
+            -DfailBuildOnCVSS=${{ env.DC_FAIL_CVSS }} \
+            -Dformats=HTML,JSON,XML,SARIF \
+            -Ddependency-check.version=${{ env.DC_VERSION }} \
+            $SUPPRESSION_ARG \
+            $NVD_ARG \
+            org.owasp:dependency-check-maven:${{ env.DC_VERSION }}:check
+        shell: bash
+
+      - name: Upload Dependency-Check reports (backend)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports-backend
+          path: |
+            ${{ env.REPORT_DIR }}/dependency-check-report.html
+            ${{ env.REPORT_DIR }}/dependency-check-report.json
+            ${{ env.REPORT_DIR }}/dependency-check-report.sarif
+            ${{ env.REPORT_DIR }}/dependency-check-report.xml
+          if-no-files-found: warn # Reports live in REPORT_DIR; adjust if project layout changes
+
+      - name: Upload SARIF to GitHub Code Scanning (backend)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ env.REPORT_DIR }}/dependency-check-report.sarif
+
+      - name: Print scan summary (backend)
+        if: always()
+        run: |
+          echo "Backend Dependency-Check completed."
+          echo "Reports: ${{ env.REPORT_DIR }}/dependency-check-report.[html|json|xml|sarif]" # Reports are stored here
+          echo "GitHub UI: Security > Code scanning alerts." # SARIF is uploaded there
+          echo "Reminder: update internal security docs (e.g., Confluence/README/security docs)." # Keep documentation current
+        shell: bash
+
+  frontend-dependency-check:
+    name: Frontend Dependency-Check
+    runs-on: ubuntu-latest
+    needs: backend-dependency-check
+
+    permissions:
+      contents: read
+      security-events: write # Needed for SARIF upload to Code Scanning
+
+    env:
+      JAVA_VERSION: "21" # Dependency-Check CLI needs Java
+      DC_VERSION: "9.1.0" # Dependency-Check version for CLI
+      DC_FAIL_CVSS: "7.0" # Fail on High/Critical (CVSS >= threshold); change to adjust policy
+      DC_SUPPRESSION_FILE: dependency-check-suppression.xml # Optional suppression file at repo root; keep reasons/refs/expiry documented
+      FRONTEND_DIR: PrimeDriveFrontend
+      REPORT_DIR: PrimeDriveFrontend/dependency-check-report # Reports for frontend
+      DC_DATA: ~/.cache/dependency-check # Cache directory for DC data
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }} # Recommended to avoid NVD rate limits
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Temurin JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Cache Dependency-Check data
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DC_DATA }}
+          key: dc-data-${{ runner.os }}-${{ env.DC_VERSION }}
+
+      - name: Download Dependency-Check CLI
+        run: |
+          curl -sL https://github.com/jeremylong/DependencyCheck/releases/download/v${{ env.DC_VERSION }}/dependency-check-${{ env.DC_VERSION }}-release.zip -o /tmp/dc.zip
+          unzip -q /tmp/dc.zip -d /tmp/dc
+        shell: bash
+
+      - name: Run Dependency-Check (frontend)
+        run: |
+          mkdir -p "${{ env.REPORT_DIR }}"
+          SUPPRESSION_ARG=""
+          NVD_ARG=""
+
+          if [[ -f "${GITHUB_WORKSPACE}/${{ env.DC_SUPPRESSION_FILE }}" ]]; then
+            echo "Using suppression file at ${GITHUB_WORKSPACE}/${{ env.DC_SUPPRESSION_FILE }}" # Maintain reasons/refs/expiry per suppression
+            SUPPRESSION_ARG="--suppression ${GITHUB_WORKSPACE}/${{ env.DC_SUPPRESSION_FILE }}"
+          else
+            echo "No suppression file found; add ${{ env.DC_SUPPRESSION_FILE }} to manage known false positives." # Suppression file hook
+          fi
+
+          if [[ -n "${{ env.NVD_API_KEY }}" ]]; then
+            echo "Using provided NVD API key to avoid rate limits." # Recommended per NVD
+            NVD_ARG="--nvdApiKey ${{ env.NVD_API_KEY }}"
+          else
+            echo "Warning: No NVD_API_KEY configured; downloads may be rate-limited (403/NoData). Set secrets.NVD_API_KEY." # NVD key hint
+          fi
+
+          /tmp/dc/dependency-check/bin/dependency-check.sh \
+            --project "PrimeDriveFrontend" \
+            --scan "${{ env.FRONTEND_DIR }}" \
+            --format "HTML,JSON,XML,SARIF" \
+            --out "${{ env.REPORT_DIR }}" \
+            --failOnCVSS "${{ env.DC_FAIL_CVSS }}" \
+            --data "${{ env.DC_DATA }}" \
+            $SUPPRESSION_ARG \
+            $NVD_ARG
+        shell: bash
+
+      - name: Upload Dependency-Check reports (frontend)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports-frontend
+          path: |
+            ${{ env.REPORT_DIR }}/dependency-check-report.html
+            ${{ env.REPORT_DIR }}/dependency-check-report.json
+            ${{ env.REPORT_DIR }}/dependency-check-report.sarif
+            ${{ env.REPORT_DIR }}/dependency-check-report.xml
+          if-no-files-found: warn # Reports live in REPORT_DIR; adjust if project layout changes
+
+      - name: Upload SARIF to GitHub Code Scanning (frontend)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ env.REPORT_DIR }}/dependency-check-report.sarif
+
+      - name: Print scan summary (frontend)
+        if: always()
+        run: |
+          echo "Frontend Dependency-Check completed."
+          echo "Reports: ${{ env.REPORT_DIR }}/dependency-check-report.[html|json|xml|sarif]" # Reports are stored here
+          echo "GitHub UI: Security > Code scanning alerts." # SARIF is uploaded there
+          echo "Reminder: update internal security docs (e.g., Confluence/README/security docs)." # Keep documentation current
+        shell: bash
