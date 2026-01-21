@@ -33,7 +33,9 @@ public class AuthSecurityRules {
                         "/api/authentication/register",
                         "/api/authentication/check-session",
                         "/api/authentication/swagger-login",
-                        "/api/authentication/swagger-register")
+                        "/api/authentication/swagger-register",
+                        "/actuator/health",
+                        "/actuator/**")
                 .permitAll());
     }
 }

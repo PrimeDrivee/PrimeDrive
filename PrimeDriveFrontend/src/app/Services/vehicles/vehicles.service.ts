@@ -25,7 +25,7 @@ import { Holding } from '../../Models/vehicles/holding.interface';
   providedIn: 'root',
 })
 export class VehiclesService {
-  private apiUrl = 'https://localhost:8443/api';
+  private apiUrl = '/api';
   private httpClient = inject(HttpClient);
 
   /**

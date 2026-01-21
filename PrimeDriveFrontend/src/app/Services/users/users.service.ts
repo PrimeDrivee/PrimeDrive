@@ -15,7 +15,7 @@ import { User } from '../../Models/vehicles/user.interface';
   providedIn: 'root',
 })
 export class UsersService {
-  private apiUrl = 'https://localhost:8443/api/users';
+  private apiUrl = '/api/users';
   private httpClient = inject(HttpClient);
 
   /**

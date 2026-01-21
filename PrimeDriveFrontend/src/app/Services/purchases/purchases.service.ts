@@ -15,7 +15,7 @@ import { Purchases } from '../../Models/purchases/purchases.interface';
   providedIn: 'root',
 })
 export class PurchasesService {
-  private apiUrl = 'https://localhost:8443/api/purchases';
+  private apiUrl = '/api/purchases';
   private httpClient = inject(HttpClient);
 
   /**

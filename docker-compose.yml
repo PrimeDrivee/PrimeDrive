@@ -1,0 +1,78 @@
+services:
+  # Frontend Service - Angular 17
+  frontend:
+    build:
+      context: ./PrimeDriveFrontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - API_URL=http://backend:8080
+    networks:
+      - primedrive-network
+    container_name: primedrive-frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Backend Service - Spring Boot
+  backend:
+    build:
+      context: ./PrimeDriveBackend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/PrimeDrive
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - primedrive-network
+    container_name: primedrive-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # MySQL Database Service
+  mysql:
+    build:
+      context: ./Database/Docker
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=PrimeDrive
+    volumes:
+      - mysql_data_v2:/var/lib/mysql
+      - ./Database/DeltaScripts:/docker-entrypoint-initdb.d
+    networks:
+      - primedrive-network
+    container_name: primedrive-mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  primedrive-network:
+    driver: bridge
+
+volumes:
+  mysql_data_v2:

@@ -15,7 +15,7 @@ import { LoginResponse } from '../../Models/auth/loginResponse.interface';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:8443/api/authentication';
+  private apiUrl = '/api/authentication';
   private httpClient = inject(HttpClient);
 
   /**
