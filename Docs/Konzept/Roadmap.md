@@ -123,5 +123,6 @@ Qualität steigt, Verkäufe werden schneller abgeschlossen
 
 🎯 *Wirkung:*
 PrimeDrive wird als sichere Plattform wahrgenommen
+<img width="2330" height="1287" alt="image" src="https://github.com/user-attachments/assets/290d4c0b-a743-4334-bf42-11ca49c9be5d" />
 
 ---
